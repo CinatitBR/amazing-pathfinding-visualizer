@@ -67,4 +67,8 @@ export const Container = styled.tr<{ cellSize?: number }>`
       background-color: #4e4396;
     }
   }
+
+  .path {
+    background-color: #d9b365;
+  }
 `
