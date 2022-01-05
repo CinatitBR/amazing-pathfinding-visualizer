@@ -1,16 +1,3 @@
 body {
   background-color: #282c34;
 }
-
-/* Board */
-table {
-  border-spacing: 0;
-  border-collapse: collapse;
-}
-
-table td {
-  border: 1px solid #897ae4;
-
-  width: 30px;
-  height: 30px;
-}
