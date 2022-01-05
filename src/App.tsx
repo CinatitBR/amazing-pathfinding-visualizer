@@ -1,25 +1,75 @@
 import { useState } from 'react';
 import Board, { RowType, CellType, RowListType } from './components/Board/Board';
+import useDijkstra from './useDijkstra';
 
 import './App.css';
 
-const createRowList = (rowCount: number, colCount: number, startPos: string, targetPos: string) => {
+export type TPosition = {
+  row: number,
+  col: number
+}
+
+const createRowList = ({
+  rowCount,
+  colCount, 
+  startPos, 
+  targetPos
+}: { 
+  rowCount: number, 
+  colCount: number, 
+  startPos: TPosition, 
+  targetPos: TPosition 
+}) => {
   const rowList: RowListType = [];
+
+  // Get start node neighbors positions
+  const startNeighborsPos = [
+    { row: startPos.row+1, col: startPos.col }, // Top
+    { row: startPos.row-1, col: startPos.col }, // Bottom
+    { row: startPos.row, col: startPos.col+1}, // Right
+    { row: startPos.row, col: startPos.col-1 } // Left
+  ]
   
   for (let i = 0; i < rowCount; i++) {
     const row: RowType = [];
   
     for (let j = 0; j < colCount; j++) {
-      const [startRow, startCol] = startPos.split('-')
-      const [targetRow, targetCol] = targetPos.split('-')
       let state = 'initial';
+      let processed = false;
 
-      if (i === parseInt(startRow) && j === parseInt(startCol))
-        state = 'start'
-      else if (i === parseInt(targetRow) && j === parseInt(targetCol))
+      // Check if node is the start node
+      if (i === startPos.row && j === startPos.col) {
+        state = 'start';
+        processed = true;
+      }
+      // Check if node is the target node
+      else if (i === targetPos.row && j === targetPos.col)
         state = 'target'
 
-      const cell: CellType = { id: `${i}-${j}`, state, weight: 1};
+      // Check if node is a start neighbor
+      const isStartNeighbor = startNeighborsPos.find(neighborPos => (
+        neighborPos.row === i && neighborPos.col === j
+      ));
+
+      const initialWeight = 1;
+
+      // If current node is a start neighbor, assign ...
+      // totalWeight the same value as initialWeight
+      let totalWeight = isStartNeighbor ? initialWeight : Infinity;
+
+      // Check if current node is start neighbor, assign parent as start node
+      let parentPos = isStartNeighbor ? startPos : null
+
+      const cell: CellType = { 
+        id: `${i}-${j}`, 
+        row: i,
+        col: j,
+        state, 
+        initialWeight, 
+        totalWeight,
+        parentPos,
+        processed
+      }
 
       row.push(cell);
     }
@@ -30,35 +80,83 @@ const createRowList = (rowCount: number, colCount: number, startPos: string, tar
   return rowList;
 }
 
-const rowListData = createRowList(25, 50, '5-20', '9-33');
+const startPos = { row: 0, col: 0};
+const targetPos = {row: 15, col: 10};
+const rowCount = 25;
+const colCount = 50;
+
+const rowListData = createRowList({ rowCount, colCount, startPos, targetPos });
 
 function App() {
-  const [rowList, setRowList] = useState(rowListData)
+  const [rowList, setRowList] = useState(rowListData);
 
-  const handleCellClick = (cell: CellType) => {
-    const [rowIndex, colIndex] = cell.id.split('-');
+  // Update board node
+  const handleRowListUpdate = (node: CellType) => {
     const newRowList = [...rowList];
+    newRowList[node.row][node.col] = node;
+    
+    setRowList(newRowList);
+  }
+  
+  const handleCellClick = (cell: CellType) => {
+    const {row, col} = cell;
+    const newNode = rowList[row][col];
+    
+    // Get node state
+    const currentState = newNode.state;
 
-    // Get cell state
-    const currentState = newRowList
-      [parseInt(rowIndex)]
-      [parseInt(colIndex)].state;
-
+    // Check node state
     if (currentState === 'start' || currentState === 'target')
       return
 
-    // Update cell state
-    newRowList
-      [parseInt(rowIndex)]
-      [parseInt(colIndex)]
-      .state = currentState === 'initial' ? 'wall' : 'initial';
+    // Update node state
+    newNode.state = currentState === 'initial' ? 'wall' : 'initial'; 
 
-    setRowList(newRowList);
+    handleRowListUpdate(newNode);
   }
+
+  // Handle algorithm finish
+  const highlightPath = (nodePos: TPosition): any => {
+    // Get current node in the path
+    const currentNode = rowList[nodePos.row][nodePos.col];
+
+    // Check if node is the start
+    if (currentNode.state === 'start')
+      return
+
+    // Update node state to 'path'
+    currentNode.state = 'path';
+    handleRowListUpdate(currentNode);
+
+    // Get next node in the path
+    const nextNode = currentNode.parentPos;
+
+    if (!nextNode) return
+
+    // Call method again with delay
+    return setTimeout(() => { 
+      highlightPath(nextNode)
+    }, 50);
+  }
+
+  const dijkstra = useDijkstra({ 
+    rowList, 
+    startPos, 
+    onRowListUpdate: handleRowListUpdate,
+    onFinish: highlightPath
+  });
 
   return (
     <div className="app">
       <Board rowList={rowList} onCellClick={handleCellClick} />
+
+      <button
+        onClick={() => {
+          dijkstra.run();
+        }}
+      >
+        Find path
+      </button>
     </div>
   );
 }
