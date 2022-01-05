@@ -1,9 +1,19 @@
 import { useState } from 'react';
+import { TPosition } from '../../App';
 import BoardRow from '../BoardRow/BoardRow'
 
 import { Container } from './Board.style';
 
-export type CellType = { id: string, state: string, weight: number };
+export type CellType = { 
+  id: string, 
+  row: number,
+  col: number,
+  state: string, 
+  initialWeight: number, 
+  totalWeight: number,
+  parentPos?: TPosition | null,
+  processed: boolean 
+}
 export type RowType = CellType[];
 export type RowListType = RowType[];
 
