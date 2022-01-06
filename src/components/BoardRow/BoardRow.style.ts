@@ -24,7 +24,7 @@ export const Container = styled.tr<{ cellSize?: number }>`
   .wall {
     background-color: var(--gray);
     border: none;
-    animation: wallAnimation 0.3s;
+    animation: wallAnimation 0.3s ease-out alternate 1 forwards running;
   }
 
   .touched {
