@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/amazing-pathfinding-visualizer/static/css/main.487dd9e8.css",
+    "main.js": "/amazing-pathfinding-visualizer/static/js/main.cf10e298.js",
+    "index.html": "/amazing-pathfinding-visualizer/index.html",
+    "main.487dd9e8.css.map": "/amazing-pathfinding-visualizer/static/css/main.487dd9e8.css.map",
+    "main.cf10e298.js.map": "/amazing-pathfinding-visualizer/static/js/main.cf10e298.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.487dd9e8.css",
+    "static/js/main.cf10e298.js"
+  ]
+}
