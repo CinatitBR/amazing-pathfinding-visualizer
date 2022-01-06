@@ -1,4 +1,8 @@
 import styled from 'styled-components';
+// @ts-ignore
+import triangleSvg from '../../assets/triangle.svg';
+// @ts-ignore
+import flagSvg from '../../assets/flag.svg';
 
 export const Container = styled.tr<{ cellSize?: number, mouseDownButton: string | null }>`
   td {
@@ -21,14 +25,14 @@ export const Container = styled.tr<{ cellSize?: number, mouseDownButton: string 
   }};
   
   .start {
-    background-image: url('/assets/triangle.svg');
+    background-image: url(${triangleSvg});
 
     /* If the position is not being dragged, cursor set to "grab" */
     cursor: ${props => !props.mouseDownButton && 'grab'};
   }
 
   .target {
-    background-image: url('/assets/flag.svg');
+    background-image: url(${flagSvg});
     cursor: ${props => !props.mouseDownButton && 'grab'};
   }
 
