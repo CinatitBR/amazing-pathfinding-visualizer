@@ -80,7 +80,7 @@ const createRowList = ({
   return rowList;
 }
 
-const startPos = { row: 0, col: 0};
+const startPos = { row: 10, col: 30};
 const targetPos = {row: 15, col: 10};
 const rowCount = 25;
 const colCount = 50;
