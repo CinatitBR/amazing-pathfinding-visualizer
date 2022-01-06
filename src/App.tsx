@@ -105,12 +105,22 @@ function App() {
     // Get node state
     const currentState = newNode.state;
 
+    // Mouse is leaving node while dragging the start or target positions.
+    // Clear node to initial state.
+    if (e.type === 'mouseleave' && (mouseDownButton === 'start' || mouseDownButton === 'target')) {
+      newNode.state = 'initial';
+    }
+    // Mouse is entering node while dragging the start or target positions.
+    // Set node state to the position dragged (target or start).
+    else if (e.type === 'mouseenter' && (mouseDownButton === 'start' || mouseDownButton === 'target')) {
+      newNode.state = mouseDownButton;
+    }
     // Check node state
-    if (currentState === 'start' || currentState === 'target')
-      return
-
+    else if (currentState === 'start' || currentState === 'target') {
+      return;
+    }
     // Left click, add wall
-    if (e.type === 'click' || mouseDownButton === 'left') { 
+    else if (e.type === 'click' || mouseDownButton === 'left') { 
       newNode.state = 'wall';
     }
     // Right click, remove wall
@@ -151,13 +161,6 @@ function App() {
     onRowListUpdate: handleRowListUpdate,
     onFinish: highlightPath
   });
-
-  useEffect(() => {
-    // document.addEventListener('contextmenu', e => {
-    //   console.log(e.button);
-    //   e.preventDefault()
-    // });
-  }, []);
 
   return (
     <Container>

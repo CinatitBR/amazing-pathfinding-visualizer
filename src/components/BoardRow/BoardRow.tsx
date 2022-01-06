@@ -1,3 +1,5 @@
+import { Console } from 'console';
+import React from 'react';
 import { RowType, CellType } from '../Board/Board';
 import { Container } from './BoardRow.style';
 
@@ -20,9 +22,14 @@ const BoardRow = ({ row, cellSize = 25, mouseDownButton, onCellClick }: Props) =
           onContextMenu={e => {
             onCellClick(e, cell)
           }}
-          onMouseOver={(e) => {
+          onMouseEnter={e => {
             if (mouseDownButton) {
               onCellClick(e, cell, mouseDownButton)
+            }
+          }}
+          onMouseLeave={e => {
+            if (mouseDownButton === 'start' || mouseDownButton === 'target') {
+              onCellClick(e, cell, mouseDownButton);
             }
           }}>
         </td>

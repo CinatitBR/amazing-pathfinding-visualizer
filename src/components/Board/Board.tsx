@@ -30,11 +30,20 @@ const Board = ({ cellSize, rowList, onCellClick }: Props) => {
     <Container 
       onMouseDown={(e) => {
         e.preventDefault();
-      
+        const node = e.target as HTMLTableCellElement;
+        const nodeState = node.className
+
         // Left click (mouse down)
         if (e.buttons === 1) {
+          // Drag start or target nodes
+          if (nodeState === 'start' || nodeState === 'target') {
+            setMouseDownButton(nodeState);
+            return;
+          }
+
           setMouseDownButton('left');
         }
+        
         // Right click (mouse down)
         else if (e.buttons === 2) {
           setMouseDownButton('right');
