@@ -44,8 +44,9 @@ const getLowestWeightNode = (nodes: CellType[]) => {
     const node = nodes[i];
 
     // Check if node is already processed
-    if (node.processed)
+    if (node.processed) {
       continue
+    }
 
     // Check if node is a wall 
     if (node.state === 'wall')
@@ -70,10 +71,11 @@ type Params = {
 }
 
 const useDijkstra = ({ startPos, rowList, onRowListUpdate, onFinish }: Params) => {
-  // The list of nodes for the algorithm to search. 
-  // Each new neighbor found is added to nodes.
-  const initialNodes = getNeighbors(startPos, rowList)
+  // Get start node neighbors positions
+  // The list of nodes for the algorithm to start the search. 
+  const initialNodes = getNeighbors(startPos, rowList);
 
+  // nodes param: Each new neighbor found is added to nodes.
   const findPath = (nodes: CellType[]) => {
     // Get node with lowest total weight
     const { lowestWeightNode, lowestWeightNodeIndex } = getLowestWeightNode(nodes);
