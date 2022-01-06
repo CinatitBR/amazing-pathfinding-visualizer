@@ -27,6 +27,18 @@ export const Container = styled.tr<{ cellSize?: number }>`
     animation: wallAnimation 0.3s;
   }
 
+  .touched {
+    animation: touchedAnimation 1s forwards alternate ease-out;
+  }
+
+  .path {
+    background-color: var(--yellow);
+  }
+
+  .current {
+    background-color: var(--red);
+  }
+
   @keyframes wallAnimation {
     0% {
       transform: scale(.3);
@@ -40,10 +52,6 @@ export const Container = styled.tr<{ cellSize?: number }>`
     100% {
       transform: scale(1);
     }
-  }
-
-  .touched {
-    animation: touchedAnimation 1s forwards alternate ease-out;
   }
 
   @keyframes touchedAnimation {
@@ -66,9 +74,5 @@ export const Container = styled.tr<{ cellSize?: number }>`
       transform: scale(1);
       background-color: var(--blue);
     }
-  }
-
-  .path {
-    background-color: var(--yellow);
   }
 `
