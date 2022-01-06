@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Board, { RowType, CellType, RowListType } from './components/Board/Board';
 import useDijkstra from './useDijkstra';
 
@@ -98,10 +98,10 @@ function App() {
     setRowList(newRowList);
   }
   
-  const handleCellClick = (cell: CellType) => {
+  const handleCellClick = (e: React.MouseEvent, cell: CellType, mouseDownButton?: string) => {
     const {row, col} = cell;
     const newNode = rowList[row][col];
-    
+
     // Get node state
     const currentState = newNode.state;
 
@@ -109,8 +109,14 @@ function App() {
     if (currentState === 'start' || currentState === 'target')
       return
 
-    // Update node state
-    newNode.state = currentState === 'initial' ? 'wall' : 'initial'; 
+    // Left click, add wall
+    if (e.type === 'click' || mouseDownButton === 'left') { 
+      newNode.state = 'wall';
+    }
+    // Right click, remove wall
+    else if (e.type === 'contextmenu' || mouseDownButton === 'right') { 
+      newNode.state = 'initial';
+    }
 
     handleRowListUpdate(newNode);
   }
@@ -145,6 +151,13 @@ function App() {
     onRowListUpdate: handleRowListUpdate,
     onFinish: highlightPath
   });
+
+  useEffect(() => {
+    // document.addEventListener('contextmenu', e => {
+    //   console.log(e.button);
+    //   e.preventDefault()
+    // });
+  }, []);
 
   return (
     <Container>

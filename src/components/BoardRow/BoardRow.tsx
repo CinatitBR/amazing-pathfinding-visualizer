@@ -4,11 +4,11 @@ import { Container } from './BoardRow.style';
 export type Props = {
   row: RowType,
   cellSize?: number,
-  isMouseDown: boolean,
-  onCellClick: (cell: CellType) => void
+  mouseDownButton: string | null,
+  onCellClick: Function
 }
 
-const BoardRow = ({ row, cellSize = 25, isMouseDown, onCellClick }: Props) => {
+const BoardRow = ({ row, cellSize = 25, mouseDownButton, onCellClick }: Props) => {
   return (
     <Container cellSize={cellSize}>
       {row.map(cell => (
@@ -16,10 +16,14 @@ const BoardRow = ({ row, cellSize = 25, isMouseDown, onCellClick }: Props) => {
           key={cell.id} 
           id={cell.id} 
           className={cell.state}
-          onClick={() => onCellClick(cell)}
-          onMouseOver={() => {
-            if (isMouseDown)
-              onCellClick(cell)
+          onClick={e => onCellClick(e, cell)}
+          onContextMenu={e => {
+            onCellClick(e, cell)
+          }}
+          onMouseOver={(e) => {
+            if (mouseDownButton) {
+              onCellClick(e, cell, mouseDownButton)
+            }
           }}>
         </td>
       ))}

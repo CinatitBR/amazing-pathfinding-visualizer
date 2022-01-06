@@ -20,20 +20,27 @@ export type RowListType = RowType[];
 type Props = {
   cellSize?: number,
   rowList: RowListType,
-  onCellClick: (cell: CellType) => void
+  onCellClick: Function
 }
 
 const Board = ({ cellSize, rowList, onCellClick }: Props) => {
-  const [isMouseDown, setIsMouseDown] = useState(false)
+  const [mouseDownButton, setMouseDownButton] = useState<string | null>(null)
 
   return (
     <Container 
       onMouseDown={(e) => {
         e.preventDefault();
-
-        setIsMouseDown(true);
+      
+        // Left click (mouse down)
+        if (e.buttons === 1) {
+          setMouseDownButton('left');
+        }
+        // Right click (mouse down)
+        else if (e.buttons === 2) {
+          setMouseDownButton('right');
+        }
       }}
-      onMouseUp={() => setIsMouseDown(false)}
+      onMouseUp={() => setMouseDownButton(null)}
     >
       <tbody>
         {rowList.map((row, index) => 
@@ -42,7 +49,7 @@ const Board = ({ cellSize, rowList, onCellClick }: Props) => {
             row={row} 
             cellSize={cellSize} 
             onCellClick={onCellClick}
-            isMouseDown={isMouseDown}
+            mouseDownButton={mouseDownButton}
           />  
         )}
       </tbody>
