@@ -7,7 +7,7 @@ import flagSvg from '../../assets/flag.svg';
 export const Container = styled.tr<{ cellSize?: number, mouseDownButton: string | null }>`
   td {
     border: 1px solid var(--white);
-    width: ${props => props.cellSize}px;
+    min-width: ${props => props.cellSize}px;
     height: ${props => props.cellSize}px;
 
     background-repeat: no-repeat;
