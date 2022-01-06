@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.tr<{ cellSize?: number }>`
   td {
-    border: 1px solid #b4a8ff;
+    border: 1px solid var(--white);
     width: ${props => props.cellSize}px;
     height: ${props => props.cellSize}px;
 
@@ -14,15 +14,15 @@ export const Container = styled.tr<{ cellSize?: number }>`
   }
   
   .start {
-    background-image: url('/assets/map-marker.svg');
+    background-image: url('/assets/triangle.svg');
   }
 
   .target {
-    background-image: url('/assets/target.svg');
+    background-image: url('/assets/flag.svg');
   }
 
   .wall {
-    background-color: #565b65;
+    background-color: var(--gray);
     border: none;
     animation: wallAnimation 0.3s;
   }
@@ -43,18 +43,18 @@ export const Container = styled.tr<{ cellSize?: number }>`
   }
 
   .touched {
-    animation: touchedAnimation 1.5s forwards alternate ease-out;
+    animation: touchedAnimation 1s forwards alternate ease-out;
   }
 
   @keyframes touchedAnimation {
     0% {
       transform: scale(0.3);
-      background-color: #452fd6;
       border-radius: 100%;
+      background-color: var(--yellow);
     }
 
     50% {
-      background-color: #ce37cc;
+      background-color: #8e48ff;
     }
 
     75% {
@@ -64,11 +64,11 @@ export const Container = styled.tr<{ cellSize?: number }>`
 
     100% {
       transform: scale(1);
-      background-color: #4e4396;
+      background-color: var(--blue);
     }
   }
 
   .path {
-    background-color: #d9b365;
+    background-color: var(--yellow);
   }
 `

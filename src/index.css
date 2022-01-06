@@ -1,5 +1,23 @@
+:root {
+  --background-dark: #29333A;
+  --purple: #8E48FF;
+  --yellow: #dec14e;
+  --blue: #485EAE;
+  --gray: #596978;
+  --white: #fff;
+
+  font-size: 16px;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(180deg, #5B32FF 0%, #8E48FF 35.42%);
+  height: 100vh;
+  font-family: 'Khula', sans-serif;
+  padding: 10px;
 }

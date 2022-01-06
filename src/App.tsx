@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Board, { RowType, CellType, RowListType } from './components/Board/Board';
 import useDijkstra from './useDijkstra';
 
-import './App.css';
+import { Container, ContentWrapper, Button, Title } from './App.style';
 
 export type TPosition = {
   row: number,
@@ -147,17 +147,17 @@ function App() {
   });
 
   return (
-    <div className="app">
-      <Board rowList={rowList} onCellClick={handleCellClick} />
+    <Container>
+      <Title>Pathfinder Visualizer</Title>
 
-      <button
-        onClick={() => {
-          dijkstra.run();
-        }}
-      >
-        Find path
-      </button>
-    </div>
+      <ContentWrapper>
+        <Board rowList={rowList} onCellClick={handleCellClick} />
+
+        <Button onClick={() => dijkstra.run()}>
+          Find path
+        </Button>
+      </ContentWrapper>
+    </Container>
   );
 }
 
