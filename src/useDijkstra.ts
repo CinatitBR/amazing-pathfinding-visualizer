@@ -126,7 +126,7 @@ const useDijkstra = ({ startPos, rowList, onRowListUpdate, onFinish }: Params) =
     // Call method again after 1 second
     return setTimeout(() => {
       findPath(nextNodes);
-    }, 80);
+    }, 0);
   }
 
   return { 
