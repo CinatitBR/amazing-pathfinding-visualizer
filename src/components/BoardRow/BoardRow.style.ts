@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.tr<{ cellSize?: number }>`
+export const Container = styled.tr<{ cellSize?: number, mouseDownButton: string | null }>`
   td {
     border: 1px solid var(--white);
     width: ${props => props.cellSize}px;
@@ -12,13 +12,24 @@ export const Container = styled.tr<{ cellSize?: number }>`
     background-origin: content-box;
     padding: 1px;
   }
+
+  /* Some position is being dragged, set cursor to "grabbing" */
+  cursor: ${props => {
+    if (props.mouseDownButton === 'start' || props.mouseDownButton === 'target') {
+      return 'grabbing';
+    }
+  }};
   
   .start {
     background-image: url('/assets/triangle.svg');
+
+    /* If the position is not being dragged, cursor set to "grab" */
+    cursor: ${props => !props.mouseDownButton && 'grab'};
   }
 
   .target {
     background-image: url('/assets/flag.svg');
+    cursor: ${props => !props.mouseDownButton && 'grab'};
   }
 
   .wall {

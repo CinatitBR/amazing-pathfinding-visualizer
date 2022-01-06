@@ -12,7 +12,7 @@ export type Props = {
 
 const BoardRow = ({ row, cellSize = 25, mouseDownButton, onCellClick }: Props) => {
   return (
-    <Container cellSize={cellSize}>
+    <Container cellSize={cellSize} mouseDownButton={mouseDownButton}>
       {row.map(cell => (
         <td 
           key={cell.id} 
