@@ -50,6 +50,10 @@ const getLowestWeightNode = (nodes: CellType[]) => {
     // Check if node is already processed
     if (node.processed)
       continue
+
+    // Check if node is a wall 
+    if (node.state === 'wall')
+      continue
     
     // Check if node has a lower weight
     else if (node.totalWeight < lowestWeightNodeValue) {
@@ -153,7 +157,7 @@ const useDijkstra = ({ startPos, rowList, onRowListUpdate, onFinish }: Params) =
     // If it is null, all nodes were processed, there's no other node to process.
     if (lowestWeightNode === null || lowestWeightNodeIndex === null)
       return null;
-  
+
     // Check if lowestWeightNode is the finish node
     if (lowestWeightNode.state === 'target') {
       // Finish algo
