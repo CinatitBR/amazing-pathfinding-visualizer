@@ -92,7 +92,7 @@ function App() {
 
   // Update board node
   const handleRowListUpdate = (node: CellType) => {
-    const newRowList = [...rowList];
+    const newRowList = rowList.slice();
     newRowList[node.row][node.col] = node;
     
     setRowList(newRowList);
