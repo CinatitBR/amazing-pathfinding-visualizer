@@ -1,8 +1,9 @@
 import { useState, useRef, useCallback } from 'react';
 import BoardNode from './components/BoardNode/BoardNode';
-import useDijkstra from './useDijkstra';
+import dijkstra from './dijkstra';
 
 import { Container, ContentWrapper, Board, Button, Title } from './App.style';
+import { visitIterationBody } from 'typescript';
 
 export type TPosition = {
   row: number,
@@ -15,7 +16,7 @@ export type TNode = {
   state: string, 
   initialWeight: number, 
   totalWeight: number,
-  parentPos?: TPosition | null,
+  parentNode: TNode | null,
   processed: boolean 
 }
 export type TRow = TNode[];
@@ -35,12 +36,12 @@ const createGrid = ({
   const grid: TGrid = [];
 
   // Get start node neighbors positions
-  const startNeighborsPos = [
-    { row: startPos.row+1, col: startPos.col }, // Top
-    { row: startPos.row-1, col: startPos.col }, // Bottom
-    { row: startPos.row, col: startPos.col+1}, // Right
-    { row: startPos.row, col: startPos.col-1 } // Left
-  ]
+  // const startNeighborsPos = [
+  //   { row: startPos.row+1, col: startPos.col }, // Top
+  //   { row: startPos.row-1, col: startPos.col }, // Bottom
+  //   { row: startPos.row, col: startPos.col+1}, // Right
+  //   { row: startPos.row, col: startPos.col-1 } // Left
+  // ]
   
   for (let i = 0; i < rowCount; i++) {
     const row: TRow = [];
@@ -52,37 +53,37 @@ const createGrid = ({
       // Check if node is the start node
       if (i === startPos.row && j === startPos.col) {
         state = 'start';
-        processed = true;
+        // processed = true;
       }
       // Check if node is the target node
       else if (i === targetPos.row && j === targetPos.col)
         state = 'target'
 
       // Check if node is a start neighbor
-      const isStartNeighbor = startNeighborsPos.find(neighborPos => (
-        neighborPos.row === i && neighborPos.col === j
-      ));
+      // const isStartNeighbor = startNeighborsPos.find(neighborPos => (
+      //   neighborPos.row === i && neighborPos.col === j
+      // ));
 
-      const initialWeight = 1;
+      // const initialWeight = 1;
 
       // If current node is a start neighbor, assign ...
       // totalWeight the same value as initialWeight
-      let totalWeight = isStartNeighbor ? initialWeight : Infinity;
+      // let totalWeight = isStartNeighbor ? initialWeight : Infinity;
 
       // Check if current node is start neighbor, assign parent as start node
-      let parentPos = isStartNeighbor ? startPos : null
+      // let parentPos = isStartNeighbor ? startPos : null
 
-      const cell: TNode = { 
+      const node: TNode = { 
         row: i,
         col: j,
         state, 
-        initialWeight, 
-        totalWeight,
-        parentPos,
+        initialWeight: 1, 
+        totalWeight: Infinity,
+        parentNode: null,
         processed
       }
 
-      row.push(cell);
+      row.push(node);
     }
   
     grid.push(row);
@@ -103,14 +104,14 @@ function App() {
   const mousePressedType = useRef<string | false>(false);
 
   // Update board node
-  const handlegridUpdate = useCallback((node: TNode) => {
-    setGrid(prevGrid => {
-      const newgrid = prevGrid.slice();
-      newgrid[node.row][node.col] = node;
+  // const handlegridUpdate = useCallback((node: TNode) => {
+  //   setGrid(prevGrid => {
+  //     const newgrid = prevGrid.slice();
+  //     newgrid[node.row][node.col] = node;
       
-      return newgrid;
-    });
-  }, []);
+  //     return newgrid;
+  //   });
+  // }, []);
 
   const updateNodeState = useCallback((state: string, row: number, col: number) => {
     setGrid(prevGrid => {
@@ -186,40 +187,52 @@ function App() {
     e.preventDefault();
   }, [])
 
-  // Handle algorithm finish
-  const highlightPath = (nodePos: TPosition): any => {
-    // Get current node in the path
-    const currentNode = grid[nodePos.row][nodePos.col];
+  const animateDijkstra = (visitedNodesInOrder: TNode[], nodesInPathOrder: TNode[]) => {
+    const {length} = visitedNodesInOrder;
 
-    // Check if node is the start
-    if (currentNode.state === 'start')
-      return
+    for (let i = 0; i <= length; i++) {
+      const node = visitedNodesInOrder[i];
+      
+      if (i === length) {
+        setTimeout(() => {
+          animatePath(nodesInPathOrder);
+        }, 30 * i);
 
-    // Update node state to 'path'
-    currentNode.state = 'path';
-    handlegridUpdate(currentNode);
+        return;
+      }
+      else if (node.state === 'start') {
+        continue
+      }
 
-    // Get next node in the path
-    const nextNode = currentNode.parentPos;
-
-    if (!nextNode) return
-
-    // Call method again with delay
-    return setTimeout(() => { 
-      highlightPath(nextNode)
-    }, 50);
+      setTimeout(() => {
+        updateNodeState('touched', node.row, node.col);
+      }, 30 * i);
+    }
   }
 
-  const dijkstra = useDijkstra({ 
-    rowList: grid, 
-    startPos, 
-    onRowListUpdate: handlegridUpdate,
-    onFinish: highlightPath
-  });
+  const animatePath = (nodesInPathOrder: TNode[]) => {
+    const { length } = nodesInPathOrder;
+
+    for (let i = 0; i < length; i++) {
+      const node = nodesInPathOrder[i];
+
+      if (node.state === 'target')
+        continue
+
+      setTimeout(() => {
+        updateNodeState('path', node.row, node.col);
+      }, 50 * i)
+    }
+  }
+
+  const runDijkstra = () => {
+    const { visitedNodesInOrder, nodesInPathOrder } = dijkstra({grid, startPos});
+    animateDijkstra(visitedNodesInOrder, nodesInPathOrder);
+  }
 
   return (
     <Container>
-      <Title>Pathfinder Visualizer</Title>
+      <Title>Pathfinding Visualizer</Title>
 
       <ContentWrapper>
         <Board>
@@ -244,7 +257,7 @@ function App() {
           </tbody>
         </Board>
 
-        <Button onClick={() => dijkstra.run()}>
+        <Button onClick={runDijkstra}>
           Find path
         </Button>
       </ContentWrapper>

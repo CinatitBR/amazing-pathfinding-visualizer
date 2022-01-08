@@ -62,7 +62,7 @@ export const Board = styled.table`
   .wall {
     background-color: var(--gray);
     border: none;
-    animation: wallAnimation 0.3s ease-out alternate 1 forwards running;
+    animation: popAnimation 0.3s ease-out alternate 1 forwards running;
   }
 
   .touched {
@@ -71,13 +71,14 @@ export const Board = styled.table`
 
   .path {
     background-color: var(--yellow);
+    animation: popAnimation 0.3s ease-out alternate 1 forwards running;
   }
 
   .current {
     background-color: var(--red);
   }
 
-  @keyframes wallAnimation {
+  @keyframes popAnimation {
     0% {
       transform: scale(.3);
     }
@@ -112,6 +113,12 @@ export const Board = styled.table`
       background-color: var(--blue);
     }
   }
+
+  /* @keyframes pathAnimation {
+    to {
+      background-color: var(--yellow);
+    }
+  } */
 `;
 
 export const Button = styled.button`
