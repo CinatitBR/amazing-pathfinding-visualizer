@@ -3,7 +3,6 @@ import BoardNode from './components/BoardNode/BoardNode';
 import dijkstra from './dijkstra';
 
 import { Container, ContentWrapper, Board, Button, Title } from './App.style';
-import { visitIterationBody } from 'typescript';
 
 export type TPosition = {
   row: number,
@@ -35,14 +34,6 @@ const createGrid = ({
 }) => {
   const grid: TGrid = [];
 
-  // Get start node neighbors positions
-  // const startNeighborsPos = [
-  //   { row: startPos.row+1, col: startPos.col }, // Top
-  //   { row: startPos.row-1, col: startPos.col }, // Bottom
-  //   { row: startPos.row, col: startPos.col+1}, // Right
-  //   { row: startPos.row, col: startPos.col-1 } // Left
-  // ]
-  
   for (let i = 0; i < rowCount; i++) {
     const row: TRow = [];
   
@@ -58,20 +49,6 @@ const createGrid = ({
       // Check if node is the target node
       else if (i === targetPos.row && j === targetPos.col)
         state = 'target'
-
-      // Check if node is a start neighbor
-      // const isStartNeighbor = startNeighborsPos.find(neighborPos => (
-      //   neighborPos.row === i && neighborPos.col === j
-      // ));
-
-      // const initialWeight = 1;
-
-      // If current node is a start neighbor, assign ...
-      // totalWeight the same value as initialWeight
-      // let totalWeight = isStartNeighbor ? initialWeight : Infinity;
-
-      // Check if current node is start neighbor, assign parent as start node
-      // let parentPos = isStartNeighbor ? startPos : null
 
       const node: TNode = { 
         row: i,
