@@ -1,4 +1,4 @@
-import { RowListType, CellType } from './components/Board/Board';
+import { RowListType, CellType } from './App';
 import { TPosition } from './App'
 
 const isNeighborValid = (neighborPos: TPosition, rowList: RowListType) => {

@@ -1,13 +1,25 @@
-import { useState, useEffect } from 'react';
-import Board, { RowType, CellType, RowListType } from './components/Board/Board';
+import { useState, useRef } from 'react';
 import useDijkstra from './useDijkstra';
 
-import { Container, ContentWrapper, Button, Title } from './App.style';
+import { Container, ContentWrapper, Board, Button, Title } from './App.style';
 
 export type TPosition = {
   row: number,
   col: number
 }
+
+export type CellType = { 
+  id: string, 
+  row: number,
+  col: number,
+  state: string, 
+  initialWeight: number, 
+  totalWeight: number,
+  parentPos?: TPosition | null,
+  processed: boolean 
+}
+export type RowType = CellType[];
+export type RowListType = RowType[];
 
 const createRowList = ({
   rowCount,
@@ -89,6 +101,8 @@ const rowListData = createRowList({ rowCount, colCount, startPos, targetPos });
 
 function App() {
   const [rowList, setRowList] = useState(rowListData);
+  // const [mouseDownButton, setMouseDownButton] = useState<string | null>(null)
+  const mousePressedType = useRef<string | false>(false);
 
   // Update board node
   const handleRowListUpdate = (node: CellType) => {
@@ -97,38 +111,74 @@ function App() {
     
     setRowList(newRowList);
   }
-  
-  const handleCellClick = (e: React.MouseEvent, cell: CellType, mouseDownButton?: string) => {
-    const {row, col} = cell;
-    const newNode = rowList[row][col];
 
-    // Get node state
-    const currentState = newNode.state;
+  const updateNodeState = (state: string, row: number, col: number) => {
+    const newRowList = rowList.slice();
+    newRowList[row][col].state = state;
 
-    // Mouse is leaving node while dragging the start or target positions.
-    // Clear node to initial state.
-    if (e.type === 'mouseleave' && (mouseDownButton === 'start' || mouseDownButton === 'target')) {
-      newNode.state = 'initial';
+    setRowList(newRowList);
+  }
+
+  const handleMouseDown = (e: any, cell: CellType) => {
+    // Left click
+    if (e.buttons === 1) {
+
+      // Drag start or target nodes
+      if (cell.state === 'start' || cell.state === 'target') {
+        mousePressedType.current = cell.state;
+      }
+
+      // Place wall
+      else {
+        mousePressedType.current = 'left';
+        updateNodeState('wall', cell.row, cell.col);
+      }
+
     }
-    // Mouse is entering node while dragging the start or target positions.
-    // Set node state to the position dragged (target or start).
-    else if (e.type === 'mouseenter' && (mouseDownButton === 'start' || mouseDownButton === 'target')) {
-      newNode.state = mouseDownButton;
+
+    // Right click: remove wall
+    else if (e.buttons === 2) {
+      mousePressedType.current = 'right';
+      updateNodeState('initial', cell.row, cell.col);
     }
-    // Check node state
-    else if (currentState === 'start' || currentState === 'target') {
+  }
+
+  const handleMouseUp = () => {
+    mousePressedType.current = false;
+  }
+
+  const handleMouseEnter = (cell: CellType) => {
+    // If the node is the target or the start, ignore
+    if (cell.state === 'start' || cell.state === 'target') {
       return;
     }
-    // Left click, add wall
-    else if (e.type === 'click' || mouseDownButton === 'left') { 
-      newNode.state = 'wall';
-    }
-    // Right click, remove wall
-    else if (e.type === 'contextmenu' || mouseDownButton === 'right') { 
-      newNode.state = 'initial';
+
+    // Place wall
+    else if (mousePressedType.current === 'left') {
+      updateNodeState('wall', cell.row, cell.col);
     }
 
-    handleRowListUpdate(newNode);
+    // Remove wall
+    else if (mousePressedType.current === 'right') {
+      updateNodeState('initial', cell.row, cell.col);
+    }
+
+    // Start or target nodes are being dragged
+    else if (mousePressedType.current === 'start' || mousePressedType.current === 'target') {
+      updateNodeState(mousePressedType.current, cell.row, cell.col);
+    }
+  }
+
+  const handleMouseLeave = (cell: CellType) => {
+    // Start or target are beind dragged out of this node
+    if (mousePressedType.current === 'start' || mousePressedType.current === 'target') {
+      updateNodeState('initial', cell.row, cell.col)
+    }
+  }
+ 
+  const handleContextMenu = (e: any) => {
+    // Prevent context menu from opening
+    e.preventDefault();
   }
 
   // Handle algorithm finish
@@ -167,7 +217,29 @@ function App() {
       <Title>Pathfinder Visualizer</Title>
 
       <ContentWrapper>
-        <Board rowList={rowList} onCellClick={handleCellClick} />
+        {/* <Board rowList={rowList} onCellClick={handleCellClick} /> */}
+
+        <Board>
+          <tbody>
+            {rowList.map((row, index) => 
+              <tr key={index}>
+                {row.map(cell => (
+                  <td 
+                    id={cell.id} 
+                    key={cell.id}
+                    className={cell.state}
+                    onMouseDown={e => handleMouseDown(e, cell)}
+                    onMouseUp={handleMouseUp}
+                    onMouseEnter={() => handleMouseEnter(cell)}
+                    onMouseLeave={() => handleMouseLeave(cell)}
+                    onContextMenu={handleContextMenu}
+                  >
+                  </td>
+                ))}
+              </tr>
+            )}
+          </tbody>
+        </Board>
 
         <Button onClick={() => dijkstra.run()}>
           Find path
