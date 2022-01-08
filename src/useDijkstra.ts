@@ -1,7 +1,7 @@
-import { RowListType, CellType } from './App';
+import { TGrid, TNode } from './App';
 import { TPosition } from './App'
 
-const isNeighborValid = (neighborPos: TPosition, rowList: RowListType) => {
+const isNeighborValid = (neighborPos: TPosition, rowList: TGrid) => {
 
   // Check if row is valid
   if (neighborPos.row >= 0 && neighborPos.row < rowList.length) {
@@ -22,7 +22,7 @@ const isNeighborValid = (neighborPos: TPosition, rowList: RowListType) => {
   return false
 }
 
-const getNeighbors = (nodePos: TPosition | CellType, rowList: RowListType) => {
+const getNeighbors = (nodePos: TPosition | TNode, rowList: TGrid) => {
   const neighborsPos = [
     { row: nodePos.row+1, col: nodePos.col }, // Top
     { row: nodePos.row-1, col: nodePos.col }, // Bottom
@@ -35,7 +35,7 @@ const getNeighbors = (nodePos: TPosition | CellType, rowList: RowListType) => {
   return neighbors;
 }
 
-const getLowestWeightNode = (nodes: CellType[]) => {
+const getLowestWeightNode = (nodes: TNode[]) => {
   let lowestWeightNode = null;
   let lowestWeightNodeValue = Infinity;
   let lowestWeightNodeIndex = null
@@ -65,7 +65,7 @@ const getLowestWeightNode = (nodes: CellType[]) => {
 
 type Params = {
   startPos: TPosition,
-  rowList: RowListType,
+  rowList: TGrid,
   onRowListUpdate: Function,
   onFinish: Function
 }
@@ -76,7 +76,7 @@ const useDijkstra = ({ startPos, rowList, onRowListUpdate, onFinish }: Params) =
   const initialNodes = getNeighbors(startPos, rowList);
 
   // nodes param: Each new neighbor found is added to nodes.
-  const findPath = (nodes: CellType[]) => {
+  const findPath = (nodes: TNode[]) => {
     // Get node with lowest total weight
     const { lowestWeightNode, lowestWeightNodeIndex } = getLowestWeightNode(nodes);
 

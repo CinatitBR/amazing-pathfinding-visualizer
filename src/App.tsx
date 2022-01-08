@@ -9,7 +9,7 @@ export type TPosition = {
   col: number
 }
 
-export type CellType = { 
+export type TNode = { 
   row: number,
   col: number,
   state: string, 
@@ -18,10 +18,10 @@ export type CellType = {
   parentPos?: TPosition | null,
   processed: boolean 
 }
-export type RowType = CellType[];
-export type RowListType = RowType[];
+export type TRow = TNode[];
+export type TGrid = TRow[];
 
-const createRowList = ({
+const createGrid = ({
   rowCount,
   colCount, 
   startPos, 
@@ -32,7 +32,7 @@ const createRowList = ({
   startPos: TPosition, 
   targetPos: TPosition 
 }) => {
-  const rowList: RowListType = [];
+  const grid: TGrid = [];
 
   // Get start node neighbors positions
   const startNeighborsPos = [
@@ -43,7 +43,7 @@ const createRowList = ({
   ]
   
   for (let i = 0; i < rowCount; i++) {
-    const row: RowType = [];
+    const row: TRow = [];
   
     for (let j = 0; j < colCount; j++) {
       let state = 'initial';
@@ -72,7 +72,7 @@ const createRowList = ({
       // Check if current node is start neighbor, assign parent as start node
       let parentPos = isStartNeighbor ? startPos : null
 
-      const cell: CellType = { 
+      const cell: TNode = { 
         row: i,
         col: j,
         state, 
@@ -85,10 +85,10 @@ const createRowList = ({
       row.push(cell);
     }
   
-    rowList.push(row);
+    grid.push(row);
   }
 
-  return rowList;
+  return grid;
 }
 
 const startPos = { row: 10, col: 30};
@@ -96,25 +96,24 @@ const targetPos = {row: 15, col: 10};
 const rowCount = 25;
 const colCount = 50;
 
-const rowListData = createRowList({ rowCount, colCount, startPos, targetPos });
+const initialGrid = createGrid({ rowCount, colCount, startPos, targetPos });
 
 function App() {
-  const [rowList, setRowList] = useState(rowListData);
+  const [grid, setGrid] = useState(initialGrid);
   const mousePressedType = useRef<string | false>(false);
 
   // Update board node
-  const handleRowListUpdate = useCallback((node: CellType) => {
-    setRowList(prevGrid => {
-      const newRowList = prevGrid.slice();
-      newRowList[node.row][node.col] = node;
+  const handlegridUpdate = useCallback((node: TNode) => {
+    setGrid(prevGrid => {
+      const newgrid = prevGrid.slice();
+      newgrid[node.row][node.col] = node;
       
-      return newRowList;
+      return newgrid;
     });
-    // setRowList(newRowList); 
   }, []);
 
   const updateNodeState = useCallback((state: string, row: number, col: number) => {
-    setRowList(prevGrid => {
+    setGrid(prevGrid => {
       const newGrid = prevGrid.slice();
       newGrid[row][col].state = state;
 
@@ -190,7 +189,7 @@ function App() {
   // Handle algorithm finish
   const highlightPath = (nodePos: TPosition): any => {
     // Get current node in the path
-    const currentNode = rowList[nodePos.row][nodePos.col];
+    const currentNode = grid[nodePos.row][nodePos.col];
 
     // Check if node is the start
     if (currentNode.state === 'start')
@@ -198,7 +197,7 @@ function App() {
 
     // Update node state to 'path'
     currentNode.state = 'path';
-    handleRowListUpdate(currentNode);
+    handlegridUpdate(currentNode);
 
     // Get next node in the path
     const nextNode = currentNode.parentPos;
@@ -212,9 +211,9 @@ function App() {
   }
 
   const dijkstra = useDijkstra({ 
-    rowList, 
+    rowList: grid, 
     startPos, 
-    onRowListUpdate: handleRowListUpdate,
+    onRowListUpdate: handlegridUpdate,
     onFinish: highlightPath
   });
 
@@ -225,7 +224,7 @@ function App() {
       <ContentWrapper>
         <Board>
           <tbody>
-            {rowList.map((row, index) => 
+            {grid.map((row, index) => 
               <tr key={index}>
                 {row.map(({ row, col, state }) => (
                   <BoardNode 
