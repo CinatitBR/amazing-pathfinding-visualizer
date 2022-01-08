@@ -220,11 +220,12 @@ function App() {
   const handleButtonClick = () => {
     if (algoStatus === 'initial') {
       setAlgoStatus('running');
-
       // Start algorithm execution
-      runDijkstra();
+      runDijkstra(); 
     }
     else if (algoStatus === 'finished') {
+      setAlgoStatus('initial')
+      // Restart grid
       restartGrid();
     }
   }
