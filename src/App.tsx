@@ -123,6 +123,9 @@ function App() {
   }, [])
 
   const handleMouseDown = useCallback((e: any, row: number, col: number, state: string) => {
+    // Prevent element drag
+    e.preventDefault();
+    
     // Left click
     if (e.buttons === 1) {
 
