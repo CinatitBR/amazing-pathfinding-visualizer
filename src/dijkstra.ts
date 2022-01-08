@@ -1,14 +1,14 @@
 import { TGrid, TNode } from './App';
 import { TPosition } from './App'
 
-const isNeighborValid = (neighborPos: TPosition, rowList: TGrid) => {
+const isNeighborValid = (neighborPos: TPosition, grid: TGrid) => {
 
   // Check if row is valid
-  if (neighborPos.row >= 0 && neighborPos.row < rowList.length) {
+  if (neighborPos.row >= 0 && neighborPos.row < grid.length) {
 
     // Check if col is valid
-    if (neighborPos.col >= 0 && neighborPos.col < rowList[neighborPos.row]?.length) {
-      const neighbor = rowList[neighborPos.row][neighborPos.col];
+    if (neighborPos.col >= 0 && neighborPos.col < grid[neighborPos.row]?.length) {
+      const neighbor = grid[neighborPos.row][neighborPos.col];
 
       // Check if neighbor is alredy processed
       if (neighbor.processed) 
@@ -22,15 +22,15 @@ const isNeighborValid = (neighborPos: TPosition, rowList: TGrid) => {
   return false
 }
 
-const getNeighbors = (nodePos: TPosition | TNode, rowList: TGrid) => {
+const getNeighbors = (nodePos: TPosition | TNode, grid: TGrid) => {
   const neighborsPos = [
     { row: nodePos.row+1, col: nodePos.col }, // Top
     { row: nodePos.row-1, col: nodePos.col }, // Bottom
     { row: nodePos.row, col: nodePos.col+1}, // Right
     { row: nodePos.row, col: nodePos.col-1 } // Left
-  ].filter(neighborPos => isNeighborValid(neighborPos, rowList));
+  ].filter(neighborPos => isNeighborValid(neighborPos, grid));
 
-  const neighbors = neighborsPos.map(({row, col}) => rowList[row][col])
+  const neighbors = neighborsPos.map(({row, col}) => grid[row][col])
 
   return neighbors;
 }
@@ -63,19 +63,35 @@ const getLowestWeightNode = (nodes: TNode[]) => {
   return { lowestWeightNode, lowestWeightNodeIndex};
 }
 
-type Params = {
-  startPos: TPosition,
-  rowList: TGrid,
-  onRowListUpdate: Function,
-  onFinish: Function
+// Get all path nodes in their appearing order
+const getNodesInPathOrder = (targetNode: TNode) => {
+  const nodesInPathOrder = [];
+  let currentNode: TNode | null = targetNode;
+
+  while (currentNode !== null) {
+    nodesInPathOrder.unshift(currentNode);
+    currentNode = currentNode.parentNode;
+  }
+
+  return nodesInPathOrder;
 }
 
-const useDijkstra = ({ startPos, rowList, onRowListUpdate, onFinish }: Params) => {
+type Params = {
+  grid: TGrid,
+  startPos: TPosition
+}
+
+const dijkstra = ({ grid, startPos }: Params) => {
   // Get start node neighbors positions
   // The list of nodes for the algorithm to start the search. 
-  const initialNodes = getNeighbors(startPos, rowList);
+  let initialNeighbors = getNeighbors(startPos, grid);
+  let visitedNodesInOrder: TNode[] = [];
 
-  // nodes param: Each new neighbor found is added to nodes.
+  // Set totalWeight of initialNeighbors
+  initialNeighbors = initialNeighbors.map(neighbor => ({ ...neighbor, totalWeight: neighbor.initialWeight }));
+
+  // nodes: Each new neighbor found is added to nodes.
+  // @ts-ignore
   const findPath = (nodes: TNode[]) => {
     // Get node with lowest total weight
     const { lowestWeightNode, lowestWeightNodeIndex } = getLowestWeightNode(nodes);
@@ -84,14 +100,15 @@ const useDijkstra = ({ startPos, rowList, onRowListUpdate, onFinish }: Params) =
     if (lowestWeightNode === null || lowestWeightNodeIndex === null)
       return null;
 
-    // Check if lowestWeightNode is the finish node
+    // FINISH ALGO
+    // Check if lowestWeightNode is the target node
     if (lowestWeightNode.state === 'target') {
-      // Finish algo
-      return onFinish(lowestWeightNode.parentPos);
+      const nodesInPathOrder = getNodesInPathOrder(lowestWeightNode);
+      return { visitedNodesInOrder, nodesInPathOrder };
     }
   
     // Get lowestWeightNode neighbors 
-    const neighbors = getNeighbors(lowestWeightNode, rowList);
+    const neighbors = getNeighbors(lowestWeightNode, grid);
 
     // Calculate new total weight for neighbors
     for (let neighbor of neighbors) {
@@ -102,38 +119,33 @@ const useDijkstra = ({ startPos, rowList, onRowListUpdate, onFinish }: Params) =
         // Update neighbor totalWeight
         neighbor.totalWeight = newTotalWeight;
         // Update neighbor parent
-        neighbor.parentPos = { row: lowestWeightNode.row, col: lowestWeightNode.col } 
+        neighbor.parentNode = lowestWeightNode; 
       }
     }
   
     // Mark node as processed
     lowestWeightNode.processed = true;
+    // Add to visited nodes
+    visitedNodesInOrder.push(lowestWeightNode);
   
     // Update node state
-    lowestWeightNode.state = 'touched'
+    // lowestWeightNode.state = 'touched'
   
-    // Update rowList state
-    onRowListUpdate(lowestWeightNode);
-  
-    // The nodes of the next render
-    let nextNodes = [...nodes]
+    // The nodes of the next function call
+    let nextNodes = nodes.slice()
 
-    // Remove lowestWeightNode from nodes
+    // Remove lowestWeightNode from next nodes
     nextNodes.splice(lowestWeightNodeIndex, 1);
 
     // Set next nodes. The neighbors of the current node will
     // be part of the next nodes.
     nextNodes = nextNodes.concat(neighbors);
 
-    // Call method again after 1 second
-    return setTimeout(() => {
-      findPath(nextNodes);
-    }, 0);
+    // Call method again
+    return findPath(nextNodes);
   }
 
-  return { 
-    run: () => findPath(initialNodes)
-  }
+  return findPath(initialNeighbors);
 }
 
-export default useDijkstra;
+export default dijkstra;
