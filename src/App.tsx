@@ -101,17 +101,8 @@ const initialGrid = createGrid({ rowCount, colCount, startPos, targetPos });
 
 function App() {
   const [grid, setGrid] = useState(initialGrid);
+  const [algoStatus, setAlgoStatus] = useState<'initial' | 'finished' | 'running'>('initial');
   const mousePressedType = useRef<string | false>(false);
-
-  // Update board node
-  // const handlegridUpdate = useCallback((node: TNode) => {
-  //   setGrid(prevGrid => {
-  //     const newgrid = prevGrid.slice();
-  //     newgrid[node.row][node.col] = node;
-      
-  //     return newgrid;
-  //   });
-  // }, []);
 
   const updateNodeState = useCallback((state: string, row: number, col: number) => {
     setGrid(prevGrid => {
@@ -121,6 +112,11 @@ function App() {
       return newGrid;
     });
   }, [])
+
+  const restartGrid = () => {
+    const newGrid = createGrid({ rowCount, colCount, startPos, targetPos });
+    setGrid(newGrid)
+  }
 
   const handleMouseDown = useCallback((e: any, row: number, col: number, state: string) => {
     // Prevent element drag
@@ -216,8 +212,10 @@ function App() {
     for (let i = 0; i < length; i++) {
       const node = nodesInPathOrder[i];
 
-      if (node.state === 'target')
-        continue
+      if (node.state === 'target') {
+        setAlgoStatus('finished');
+        return;
+      }
 
       setTimeout(() => {
         updateNodeState('path', node.row, node.col);
@@ -228,6 +226,18 @@ function App() {
   const runDijkstra = () => {
     const { visitedNodesInOrder, nodesInPathOrder } = dijkstra({grid, startPos});
     animateDijkstra(visitedNodesInOrder, nodesInPathOrder);
+  }
+
+  const handleButtonClick = () => {
+    if (algoStatus === 'initial') {
+      setAlgoStatus('running');
+
+      // Start algorithm execution
+      runDijkstra();
+    }
+    else if (algoStatus === 'finished') {
+      restartGrid();
+    }
   }
 
   return (
@@ -257,8 +267,14 @@ function App() {
           </tbody>
         </Board>
 
-        <Button onClick={runDijkstra}>
-          Find path
+        <Button 
+          onClick={handleButtonClick} 
+          disabled={algoStatus === 'running'}
+          algoStatus={algoStatus}
+        >
+          {algoStatus === 'initial' && 'Find path'}
+          {algoStatus === 'running' && 'Running...'}
+          {algoStatus === 'finished' && 'Restart'}
         </Button>
       </ContentWrapper>
     </Container>

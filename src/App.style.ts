@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 // @ts-ignore
 import triangleSvg from './assets/triangle.svg';
 // @ts-ignore
@@ -121,7 +121,7 @@ export const Board = styled.table`
   } */
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<{ algoStatus: string }>`
   font-size: 1.3rem;
   font-weight: normal;
 
@@ -132,10 +132,14 @@ export const Button = styled.button`
   border-radius: 4px;
   padding: 10px;
   cursor: pointer;
-
   transition: transform 300ms ease;
 
   :hover {
     transform: translateY(-5px);
   }
+
+  ${({algoStatus}) => algoStatus === 'running' && css`
+    background-color: #5b467e;
+    pointer-events: none;
+  `}
 `;
