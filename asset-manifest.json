@@ -1,13 +1,15 @@
 {
   "files": {
-    "main.css": "/amazing-pathfinding-visualizer/static/css/main.487dd9e8.css",
-    "main.js": "/amazing-pathfinding-visualizer/static/js/main.cf10e298.js",
+    "main.css": "/amazing-pathfinding-visualizer/static/css/main.57c6d408.css",
+    "main.js": "/amazing-pathfinding-visualizer/static/js/main.950d4c8b.js",
     "index.html": "/amazing-pathfinding-visualizer/index.html",
-    "main.487dd9e8.css.map": "/amazing-pathfinding-visualizer/static/css/main.487dd9e8.css.map",
-    "main.cf10e298.js.map": "/amazing-pathfinding-visualizer/static/js/main.cf10e298.js.map"
+    "static/media/flag.svg": "/amazing-pathfinding-visualizer/static/media/flag.a4bee9889fe22b7d8099bb6199cef69f.svg",
+    "static/media/triangle.svg": "/amazing-pathfinding-visualizer/static/media/triangle.5affe41abccec1ac5b5da2fc1c5cf540.svg",
+    "main.57c6d408.css.map": "/amazing-pathfinding-visualizer/static/css/main.57c6d408.css.map",
+    "main.950d4c8b.js.map": "/amazing-pathfinding-visualizer/static/js/main.950d4c8b.js.map"
   },
   "entrypoints": [
-    "static/css/main.487dd9e8.css",
-    "static/js/main.cf10e298.js"
+    "static/css/main.57c6d408.css",
+    "static/js/main.950d4c8b.js"
   ]
 }
