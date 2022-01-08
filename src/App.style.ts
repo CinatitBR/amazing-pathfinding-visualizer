@@ -46,17 +46,14 @@ export const Board = styled.table`
     padding: 1px;
   }
 
-  /* Some position is being dragged, set cursor to "grabbing" */
-  
-  
   .start {
     background-image: url(${triangleSvg});
-
-    /* If the position is not being dragged, cursor set to "grab" */
+    cursor: grab;
   }
 
   .target {
     background-image: url(${flagSvg});
+    cursor: grab;
   }
 
   .wall {
