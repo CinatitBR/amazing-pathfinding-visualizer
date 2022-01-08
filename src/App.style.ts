@@ -18,6 +18,7 @@ export const ContentWrapper = styled.main`
   border-radius: 16px;
   background-color: var(--background-dark);
   width: 100%;
+  overflow-x: auto;
   
   display: flex;
   flex-direction: column;
@@ -29,6 +30,7 @@ export const ContentWrapper = styled.main`
 export const Title = styled.h1`
   color: var(--white);
   font-size: 2.8rem;
+  text-align: center;
 `;
 
 export const Board = styled.table`

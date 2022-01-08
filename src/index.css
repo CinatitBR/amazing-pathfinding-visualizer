@@ -17,8 +17,9 @@
 }
 
 body {
-  background: linear-gradient(180deg, #5B32FF 0%, #8E48FF 35.42%);
-  height: 100vh;
+  height: 100%;
   font-family: 'Khula', sans-serif;
   padding: 10px;
+
+  background: linear-gradient(180deg, #5B32FF 0%, #8E48FF 35.42%) fixed;
 }
