@@ -6,6 +6,7 @@ import flagSvg from './assets/flag.svg';
 
 export const Container = styled.div`
   margin-top: 30px;
+  width: 100%;
 
   display: flex;
   flex-direction: column;
@@ -14,9 +15,9 @@ export const Container = styled.div`
 
 export const ContentWrapper = styled.main`
   padding: 20px;
-  border-radius: 35px;
+  border-radius: 16px;
   background-color: var(--background-dark);
-  margin: 0 auto;
+  width: 100%;
   
   display: flex;
   flex-direction: column;

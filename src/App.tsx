@@ -223,7 +223,6 @@ function App() {
       <Title>Pathfinder Visualizer</Title>
 
       <ContentWrapper>
-
         <Board>
           <tbody>
             {rowList.map((row, index) => 
