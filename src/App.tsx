@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
+import BoardNode from './components/BoardNode/BoardNode';
 import useDijkstra from './useDijkstra';
 
 import { Container, ContentWrapper, Board, Button, Title } from './App.style';
@@ -9,7 +10,6 @@ export type TPosition = {
 }
 
 export type CellType = { 
-  id: string, 
   row: number,
   col: number,
   state: string, 
@@ -73,7 +73,6 @@ const createRowList = ({
       let parentPos = isStartNeighbor ? startPos : null
 
       const cell: CellType = { 
-        id: `${i}-${j}`, 
         row: i,
         col: j,
         state, 
@@ -101,37 +100,41 @@ const rowListData = createRowList({ rowCount, colCount, startPos, targetPos });
 
 function App() {
   const [rowList, setRowList] = useState(rowListData);
-  // const [mouseDownButton, setMouseDownButton] = useState<string | null>(null)
   const mousePressedType = useRef<string | false>(false);
 
   // Update board node
-  const handleRowListUpdate = (node: CellType) => {
-    const newRowList = rowList.slice();
-    newRowList[node.row][node.col] = node;
-    
-    setRowList(newRowList);
-  }
+  const handleRowListUpdate = useCallback((node: CellType) => {
+    setRowList(prevGrid => {
+      const newRowList = prevGrid.slice();
+      newRowList[node.row][node.col] = node;
+      
+      return newRowList;
+    });
+    // setRowList(newRowList); 
+  }, []);
 
-  const updateNodeState = (state: string, row: number, col: number) => {
-    const newRowList = rowList.slice();
-    newRowList[row][col].state = state;
+  const updateNodeState = useCallback((state: string, row: number, col: number) => {
+    setRowList(prevGrid => {
+      const newGrid = prevGrid.slice();
+      newGrid[row][col].state = state;
 
-    setRowList(newRowList);
-  }
+      return newGrid;
+    });
+  }, [])
 
-  const handleMouseDown = (e: any, cell: CellType) => {
+  const handleMouseDown = useCallback((e: any, row: number, col: number, state: string) => {
     // Left click
     if (e.buttons === 1) {
 
       // Drag start or target nodes
-      if (cell.state === 'start' || cell.state === 'target') {
-        mousePressedType.current = cell.state;
+      if (state === 'start' || state === 'target') {
+        mousePressedType.current = state;
       }
 
       // Place wall
       else {
         mousePressedType.current = 'left';
-        updateNodeState('wall', cell.row, cell.col);
+        updateNodeState('wall', row, col);
       }
 
     }
@@ -139,47 +142,47 @@ function App() {
     // Right click: remove wall
     else if (e.buttons === 2) {
       mousePressedType.current = 'right';
-      updateNodeState('initial', cell.row, cell.col);
+      updateNodeState('initial', row, col);
     }
-  }
+  }, [updateNodeState]);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     mousePressedType.current = false;
-  }
+  }, [])
 
-  const handleMouseEnter = (cell: CellType) => {
+  const handleMouseEnter = useCallback((row: number, col: number, state: string) => {
     // If the node is the target or the start, ignore
-    if (cell.state === 'start' || cell.state === 'target') {
+    if (state === 'start' || state === 'target') {
       return;
     }
 
     // Place wall
     else if (mousePressedType.current === 'left') {
-      updateNodeState('wall', cell.row, cell.col);
+      updateNodeState('wall', row, col);
     }
 
     // Remove wall
     else if (mousePressedType.current === 'right') {
-      updateNodeState('initial', cell.row, cell.col);
+      updateNodeState('initial', row, col);
     }
 
     // Start or target nodes are being dragged
     else if (mousePressedType.current === 'start' || mousePressedType.current === 'target') {
-      updateNodeState(mousePressedType.current, cell.row, cell.col);
+      updateNodeState(mousePressedType.current, row, col);
     }
-  }
+  }, [updateNodeState])
 
-  const handleMouseLeave = (cell: CellType) => {
+  const handleMouseLeave = useCallback((row: number, col: number) => {
     // Start or target are beind dragged out of this node
     if (mousePressedType.current === 'start' || mousePressedType.current === 'target') {
-      updateNodeState('initial', cell.row, cell.col)
+      updateNodeState('initial', row, col)
     }
-  }
+  }, [updateNodeState])
  
-  const handleContextMenu = (e: any) => {
+  const handleContextMenu = useCallback((e: any) => {
     // Prevent context menu from opening
     e.preventDefault();
-  }
+  }, [])
 
   // Handle algorithm finish
   const highlightPath = (nodePos: TPosition): any => {
@@ -217,24 +220,23 @@ function App() {
       <Title>Pathfinder Visualizer</Title>
 
       <ContentWrapper>
-        {/* <Board rowList={rowList} onCellClick={handleCellClick} /> */}
 
         <Board>
           <tbody>
             {rowList.map((row, index) => 
               <tr key={index}>
-                {row.map(cell => (
-                  <td 
-                    id={cell.id} 
-                    key={cell.id}
-                    className={cell.state}
-                    onMouseDown={e => handleMouseDown(e, cell)}
+                {row.map(({ row, col, state }) => (
+                  <BoardNode 
+                    key={`${row}-${col}`}
+                    row={row}
+                    col={col}
+                    state={state}
+                    onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
-                    onMouseEnter={() => handleMouseEnter(cell)}
-                    onMouseLeave={() => handleMouseLeave(cell)}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
                     onContextMenu={handleContextMenu}
-                  >
-                  </td>
+                  />
                 ))}
               </tr>
             )}
