@@ -69,15 +69,22 @@ const createGrid = ({
   return grid;
 }
 
-const startPos = { row: 10, col: 30};
-const targetPos = {row: 15, col: 10};
+const initialStartPos = { row: 10, col: 30 };
+const initialTargetPos = { row: 15, col: 10 };
 const rowCount = 25;
 const colCount = 50;
 
-const initialGrid = createGrid({ rowCount, colCount, startPos, targetPos });
+const initialGrid = createGrid({ 
+  rowCount, 
+  colCount, 
+  startPos: initialStartPos, 
+  targetPos: initialTargetPos 
+});
 
 function App() {
   const [grid, setGrid] = useState(initialGrid);
+  const [startPos, setStartPos] = useState(initialStartPos);
+  const [targetPos, setTargetPos] = useState(initialTargetPos);
   const [algoStatus, setAlgoStatus] = useState<'initial' | 'finished' | 'running'>('initial');
   const mousePressedType = useRef<string | false>(false);
 
@@ -145,6 +152,11 @@ function App() {
     // Start or target nodes are being dragged
     else if (mousePressedType.current === 'start' || mousePressedType.current === 'target') {
       updateNodeState(mousePressedType.current, row, col);
+
+      // Set the new positions of "start" or "target" nodes
+      mousePressedType.current === 'start' 
+        ? setStartPos({ row, col })
+        : setTargetPos({ row, col });
     }
   }, [updateNodeState])
 
