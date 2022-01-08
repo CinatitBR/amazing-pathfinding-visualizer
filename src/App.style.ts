@@ -79,7 +79,6 @@ export const Board = styled.table`
   @keyframes wallAnimation {
     0% {
       transform: scale(.3);
-      border-radius: 100%;
     }
 
     50% {
