@@ -235,7 +235,7 @@ function App() {
       <Title>Pathfinding Visualizer</Title>
 
       <ContentWrapper>
-        <Board>
+        <Board algoStatus={algoStatus}>
           <tbody>
             {grid.map((row, index) => 
               <tr key={index}>

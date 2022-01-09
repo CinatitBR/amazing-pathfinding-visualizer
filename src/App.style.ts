@@ -33,8 +33,9 @@ export const Title = styled.h1`
   text-align: center;
 `;
 
-export const Board = styled.table`
+export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finished' }>`
   border-collapse: collapse;
+  pointer-events: ${({ algoStatus }) => algoStatus === 'running' ? 'none' : 'auto'};
 
   td {
     border: 1px solid var(--white);
