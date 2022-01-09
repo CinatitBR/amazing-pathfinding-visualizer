@@ -137,12 +137,6 @@ export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finishe
       background-color: var(--blue);
     }
   }
-
-  /* @keyframes pathAnimation {
-    to {
-      background-color: var(--yellow);
-    }
-  } */
 `;
 
 export const Button = styled.button<{ algoStatus: string }>`
