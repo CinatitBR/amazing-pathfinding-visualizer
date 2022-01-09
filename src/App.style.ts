@@ -11,6 +11,18 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  .myLink {
+    color: var(--white);
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+  }
+
+  .myLink a {
+    color: var(--white);
+    font-weight: bold;
+  }
 `;
 
 export const ContentWrapper = styled.main`

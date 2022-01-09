@@ -269,6 +269,10 @@ function App() {
           {algoStatus === 'finished' && 'Restart'}
         </Button>
       </ContentWrapper>
+
+      <p className="myLink">
+        Made with ❤️ by <a href="https://github.com/CinatitBR">Igor Rocha</a>
+      </p>
     </Container>
   );
 }
