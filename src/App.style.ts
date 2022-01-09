@@ -25,6 +25,18 @@ export const ContentWrapper = styled.main`
   justify-content: center;
   align-items: center;
   gap: 20px;
+
+  p {
+    font-size: 1.15rem;
+    color: var(--white);
+    font-weight: bold;
+    margin-right: auto;
+  }
+
+  p span {
+    color: var(--yellow);
+    font-weight: normal;
+  }
 `;
 
 export const Title = styled.h1`

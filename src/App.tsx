@@ -235,6 +235,8 @@ function App() {
       <Title>Pathfinding Visualizer</Title>
 
       <ContentWrapper>
+        <p><span>Algorithm:</span> Dijkstra</p>
+
         <Board algoStatus={algoStatus}>
           <tbody>
             {grid.map((row, index) => 
