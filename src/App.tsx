@@ -172,23 +172,40 @@ function App() {
     e.preventDefault();
   }, [])
 
-  const animateDijkstra = (visitedNodesInOrder: TNode[], nodesInPathOrder: TNode[]) => {
-    const {length} = visitedNodesInOrder;
+  const animateDijkstra = (visitedNodesInOrder: TNode[], nodesInPathOrder: TNode[] | null) => {
+    const { length } = visitedNodesInOrder;
 
     for (let i = 0; i <= length; i++) {
       const node = visitedNodesInOrder[i];
-      
+
+      // Check if all nodes were touched.
       if (i === length) {
-        setTimeout(() => {
-          animatePath(nodesInPathOrder);
-        }, 30 * i);
+
+        // Check if path exists. 
+        // nodesInPathOrder may not exist (when it wasn't possible to reach the target).
+        if (nodesInPathOrder) {
+          // Call path animation
+          setTimeout(() => {
+            animatePath(nodesInPathOrder);
+          }, 30 * i);
+        }
+        
+        // If path doesn't exist, finish animation.
+        else {
+          setTimeout(() => {
+            setAlgoStatus('finished');
+          }, 30 * i);
+        }
 
         return;
       }
+
+      // Doesn't touch the start node
       else if (node.state === 'start') {
         continue
       }
 
+      // Touch block
       setTimeout(() => {
         updateNodeState('touched', node.row, node.col);
       }, 30 * i);
@@ -201,11 +218,13 @@ function App() {
     for (let i = 0; i < length; i++) {
       const node = nodesInPathOrder[i];
 
+      // Finish path animation.
       if (node.state === 'target') {
         setAlgoStatus('finished');
         return;
       }
 
+      // Mark node as path.
       setTimeout(() => {
         updateNodeState('path', node.row, node.col);
       }, 50 * i)
