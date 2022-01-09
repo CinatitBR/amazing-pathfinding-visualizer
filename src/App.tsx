@@ -1,6 +1,8 @@
 import { useState, useRef, useCallback } from 'react';
 import BoardNode from './components/BoardNode/BoardNode';
 import dijkstra from './dijkstra';
+// @ts-ignore
+import popSoundPath from './assets/pop-sound.mp3'
 
 import { Container, ContentWrapper, Board, Button, Title } from './App.style';
 
@@ -33,14 +35,14 @@ const createGrid = ({
   targetPos: TPosition 
 }) => {
   const grid: TGrid = [];
-
+  
   for (let i = 0; i < rowCount; i++) {
     const row: TRow = [];
-  
+    
     for (let j = 0; j < colCount; j++) {
       let state = 'initial';
       let processed = false;
-
+      
       // Check if node is the start node
       if (i === startPos.row && j === startPos.col) {
         state = 'start';
@@ -48,8 +50,8 @@ const createGrid = ({
       }
       // Check if node is the target node
       else if (i === targetPos.row && j === targetPos.col)
-        state = 'target'
-
+      state = 'target'
+      
       const node: TNode = { 
         row: i,
         col: j,
@@ -59,13 +61,13 @@ const createGrid = ({
         parentNode: null,
         processed
       }
-
+      
       row.push(node);
     }
-  
+    
     grid.push(row);
   }
-
+  
   return grid;
 }
 
@@ -80,6 +82,8 @@ const initialGrid = createGrid({
   startPos: initialStartPos, 
   targetPos: initialTargetPos 
 });
+
+const popSound = new Audio(popSoundPath);
 
 function App() {
   const [grid, setGrid] = useState(initialGrid);
@@ -117,6 +121,7 @@ function App() {
       // Place wall
       else {
         mousePressedType.current = 'left';
+        popSound.play(); // Play pop sound
         updateNodeState('wall', row, col);
       }
 
@@ -142,6 +147,7 @@ function App() {
     // Place wall
     else if (mousePressedType.current === 'left') {
       updateNodeState('wall', row, col);
+      popSound.play(); // Play pop sound
     }
 
     // Remove wall
