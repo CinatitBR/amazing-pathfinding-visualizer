@@ -96,9 +96,11 @@ const dijkstra = ({ grid, startPos }: Params) => {
     // Get node with lowest total weight
     const { lowestWeightNode, lowestWeightNodeIndex } = getLowestWeightNode(nodes);
 
-    // If it is null, all nodes were processed, there's no other node to process.
-    if (lowestWeightNode === null || lowestWeightNodeIndex === null)
-      return null;
+    // If it is null, it means the path is blocked, there's no way to reach the target.
+    // All nodes were processed, there's no other node to process.
+    if (lowestWeightNode === null || lowestWeightNodeIndex === null) {
+      return { visitedNodesInOrder };
+    }
 
     // FINISH ALGO
     // Check if lowestWeightNode is the target node
