@@ -95,6 +95,7 @@ function App() {
   
   const startPos = useRef<TPosition>({ row: 0, col: 0 });
   const targetPos = useRef<TPosition>({ row: 0, col: 0 });
+  const colCount = useRef(0)
   const gridWidth = useRef<number | null>(null);
 
   const mousePressedType = useRef<string | false>(false);
@@ -112,7 +113,7 @@ function App() {
   const restartGrid = () => {
     const newGrid = createGrid({ 
       rowCount, 
-      colCount, 
+      colCount: colCount.current, 
       startPos: startPos.current, 
       targetPos: targetPos.current 
     });
@@ -277,11 +278,11 @@ function App() {
     const getInitialGrid = () => {
       // Calculate initial grid sizes
       const initialGridWidth = boardWrapperRef.current!.scrollWidth;
-      const colCount = Math.floor(initialGridWidth / nodeWidth);
+      const initialColCount = Math.floor(initialGridWidth / nodeWidth);
 
       const initialStartPos = {
         row: Math.floor(rowCount / 2),
-        col: Math.floor(colCount / 2)
+        col: Math.floor(initialColCount / 2)
       }
       const initialTargetPos = {
         row: Math.floor(rowCount / 2),
@@ -291,11 +292,12 @@ function App() {
       // Update refs
       startPos.current = initialStartPos;
       targetPos.current = initialTargetPos;
+      colCount.current = initialColCount;
       
       // Create initial grid
       const initialGrid = createGrid({ 
         rowCount: rowCount, 
-        colCount: colCount, 
+        colCount: initialColCount, 
         startPos: initialStartPos, 
         targetPos: initialTargetPos 
       });
@@ -381,8 +383,9 @@ function App() {
         // Resize grid to new col count
         resizeGrid(newColCount);
 
-        // Update gridWidth
+        // Update refs
         gridWidth.current = newGridWidth;
+        colCount.current = newColCount;
       }
     }
 
