@@ -39,6 +39,7 @@ export const BoardWrapper = styled.main`
     color: var(--white);
     font-weight: bold;
     margin-right: auto;
+    margin-left: 10px;
   }
 
   p span {
