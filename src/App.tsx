@@ -83,9 +83,8 @@ const createGrid = ({
   return grid;
 }
 
-const rowCount = 25;
-const colCount = 50;
-const nodeWidth = 25;
+const ROW_COUNT = 25;
+const NODE_WIDTH = 25;
 
 const popSound = new Audio(popSoundPath);
 
@@ -112,7 +111,7 @@ function App() {
 
   const restartGrid = () => {
     const newGrid = createGrid({ 
-      rowCount, 
+      rowCount: ROW_COUNT, 
       colCount: colCount.current, 
       startPos: startPos.current, 
       targetPos: targetPos.current 
@@ -278,14 +277,14 @@ function App() {
     const getInitialGrid = () => {
       // Calculate initial grid sizes
       const initialGridWidth = boardWrapperRef.current!.scrollWidth;
-      const initialColCount = Math.floor(initialGridWidth / nodeWidth);
+      const initialColCount = Math.floor(initialGridWidth / NODE_WIDTH);
 
       const initialStartPos = {
-        row: Math.floor(rowCount / 2),
+        row: Math.floor(ROW_COUNT / 2),
         col: Math.floor(initialColCount / 2)
       }
       const initialTargetPos = {
-        row: Math.floor(rowCount / 2),
+        row: Math.floor(ROW_COUNT / 2),
         col: 0
       }
 
@@ -296,7 +295,7 @@ function App() {
       
       // Create initial grid
       const initialGrid = createGrid({ 
-        rowCount: rowCount, 
+        rowCount: ROW_COUNT, 
         colCount: initialColCount, 
         startPos: initialStartPos, 
         targetPos: initialTargetPos 
@@ -311,7 +310,7 @@ function App() {
         const newGrid: TGrid = [];
 
         // Create resized grid
-        for (let row = 0; row < rowCount; row++) {
+        for (let row = 0; row < ROW_COUNT; row++) {
           const currentRow = [];
 
           for (let col = 0; col < newColCount; col++) {
@@ -373,7 +372,7 @@ function App() {
       }
 
       const newGridWidth = boardWrapperRef.current.scrollWidth;
-      const newColCount = Math.floor(newGridWidth / nodeWidth);
+      const newColCount = Math.floor(newGridWidth / NODE_WIDTH);
 
       // Check if new grid width is different than current grid width
       if (
