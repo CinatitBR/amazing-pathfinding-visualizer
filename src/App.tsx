@@ -83,8 +83,6 @@ const createGrid = ({
   return grid;
 }
 
-const initialStartPos = { row: 10, col: 30 };
-const initialTargetPos = { row: 15, col: 10 };
 const rowCount = 25;
 const colCount = 50;
 const nodeWidth = 25;
@@ -93,9 +91,11 @@ const popSound = new Audio(popSoundPath);
 
 function App() {
   const [grid, setGrid] = useState<TGrid>([]);
-  const [startPos, setStartPos] = useState(initialStartPos);
-  const [targetPos, setTargetPos] = useState(initialTargetPos);
   const [algoStatus, setAlgoStatus] = useState<'initial' | 'finished' | 'running'>('initial');
+  
+  const startPos = useRef<TPosition>({ row: 0, col: 0 });
+  const targetPos = useRef<TPosition>({ row: 0, col: 0 });
+  const gridWidth = useRef<number | null>(null);
 
   const mousePressedType = useRef<string | false>(false);
   const boardWrapperRef = useRef<HTMLDivElement>(null);
@@ -110,8 +110,13 @@ function App() {
   }, [])
 
   const restartGrid = () => {
-    const newGrid = createGrid({ rowCount, colCount, startPos, targetPos });
-    setGrid(newGrid)
+    const newGrid = createGrid({ 
+      rowCount, 
+      colCount, 
+      startPos: startPos.current, 
+      targetPos: targetPos.current 
+    });
+    setGrid(newGrid);
   }
 
   const handleMouseDown = useCallback((e: any, row: number, col: number, state: string) => {
@@ -169,8 +174,8 @@ function App() {
 
       // Set the new positions of "start" or "target" nodes
       mousePressedType.current === 'start' 
-        ? setStartPos({ row, col })
-        : setTargetPos({ row, col });
+        ? startPos.current = { row, col }
+        : targetPos.current = { row, col };
     }
   }, [updateNodeState])
 
@@ -246,7 +251,11 @@ function App() {
   }
 
   const runDijkstra = () => {
-    const { visitedNodesInOrder, nodesInPathOrder } = dijkstra({grid, startPos});
+    const { 
+      visitedNodesInOrder, 
+      nodesInPathOrder 
+    } = dijkstra({ grid, startPos: startPos.current });
+
     animateDijkstra(visitedNodesInOrder, nodesInPathOrder);
   }
 
@@ -264,34 +273,37 @@ function App() {
   }
 
   useEffect(() => {
-    if (!boardWrapperRef.current) {
-      return;
+
+    const getInitialGrid = () => {
+      // Calculate initial grid sizes
+      const initialGridWidth = boardWrapperRef.current!.scrollWidth;
+      const colCount = Math.floor(initialGridWidth / nodeWidth);
+
+      const initialStartPos = {
+        row: Math.floor(rowCount / 2),
+        col: Math.floor(colCount / 2)
+      }
+      const initialTargetPos = {
+        row: Math.floor(rowCount / 2),
+        col: 0
+      }
+
+      // Update refs
+      startPos.current = initialStartPos;
+      targetPos.current = initialTargetPos;
+      
+      // Create initial grid
+      const initialGrid = createGrid({ 
+        rowCount: rowCount, 
+        colCount: colCount, 
+        startPos: initialStartPos, 
+        targetPos: initialTargetPos 
+      });
+
+      return { initialGrid, initialGridWidth };
     }
 
-    // Calculate initial grid sizes
-    const gridWidth = boardWrapperRef.current.scrollWidth;
-    const colCount = Math.floor(gridWidth / nodeWidth);
-    
-    // Create initial grid
-    const initialGrid = createGrid({ 
-      rowCount: rowCount, 
-      colCount: colCount, 
-      startPos: initialStartPos, 
-      targetPos: initialTargetPos 
-    });
-
-    setGrid(initialGrid);
-
-    const resizeGrid = () => {
-      // Check if ref is null
-      if (!boardWrapperRef.current) {
-        return;
-      }
-  
-      // Calculate new grid sizes
-      const gridWidth = boardWrapperRef.current.scrollWidth;
-      const colCount = Math.floor(gridWidth / nodeWidth);
-
+    const resizeGrid = (newColCount: number) => {
       // Update grid
       setGrid(prevGrid => {
         const newGrid: TGrid = [];
@@ -300,7 +312,7 @@ function App() {
         for (let row = 0; row < rowCount; row++) {
           const currentRow = [];
 
-          for (let col = 0; col < colCount; col++) {
+          for (let col = 0; col < newColCount; col++) {
             const currentNode = prevGrid[row][col];
 
             // Check if current node exist
@@ -321,11 +333,66 @@ function App() {
           newGrid.push(currentRow);
         }
 
+        // Check if start node is beyond the col limit
+        if (startPos.current.col > newColCount - 1) {
+          // Update start position
+          startPos.current.col = newColCount - 1;
+
+          // Set the new start node
+          newGrid
+            [startPos.current.row]
+            [startPos.current.col]
+            .state = 'start';
+        }
+
+        // Check if target node is beyond the col limit
+        if (targetPos.current.col > newColCount - 1) {
+          // Update start position
+          targetPos.current.col = newColCount - 1;
+
+          // Set the new start node
+          newGrid
+            [targetPos.current.row]
+            [targetPos.current.col]
+            .state = 'target';
+        }
+
         return newGrid;
       });
     }
 
-    window.addEventListener('resize', resizeGrid);
+    const handleResize = () => {
+      // Check if refs are null
+      if (
+        !boardWrapperRef.current ||
+        !gridWidth.current
+      ) {
+        return;
+      }
+
+      const newGridWidth = boardWrapperRef.current.scrollWidth;
+      const newColCount = Math.floor(newGridWidth / nodeWidth);
+
+      // Check if new grid width is different than current grid width
+      if (
+        newGridWidth > gridWidth.current + 1 ||
+        newGridWidth < gridWidth.current - 1
+      ) {
+        // Resize grid to new col count
+        resizeGrid(newColCount);
+
+        // Update gridWidth
+        gridWidth.current = newGridWidth;
+      }
+    }
+
+    // Update grid to initialGrid
+    const { initialGrid, initialGridWidth } = getInitialGrid();
+    setGrid(initialGrid);
+    gridWidth.current = initialGridWidth;
+
+    // Add resize event listener
+    window.addEventListener('resize', handleResize);
   }, []);
 
   return (
