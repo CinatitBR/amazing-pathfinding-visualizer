@@ -23,11 +23,10 @@ export const Title = styled.h1`
 `;
 
 export const BoardWrapper = styled.main`
-  padding: 20px;
+  padding: 20px 0;
   border-radius: 16px;
   background-color: var(--background-dark);
   width: 100%;
-  overflow-x: auto;
   
   display: flex;
   flex-direction: column;
@@ -51,6 +50,7 @@ export const BoardWrapper = styled.main`
 export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finished' }>`
   border-collapse: collapse;
   pointer-events: ${({ algoStatus }) => algoStatus === 'running' ? 'none' : 'auto'};
+  width: 100%;
 
   td {
     border: 1px solid var(--white);

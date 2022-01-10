@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import BoardNode from './components/BoardNode/BoardNode';
 import dijkstra from './dijkstra';
 // @ts-ignore
@@ -22,6 +22,18 @@ export type TNode = {
 }
 export type TRow = TNode[];
 export type TGrid = TRow[];
+
+const createNode = (row: number, col: number): TNode => {
+  return {
+    row,
+    col,
+    state: 'initial',
+    initialWeight: 1, 
+    totalWeight: Infinity,
+    parentNode: null,
+    processed: false
+  }
+}
 
 const createGrid = ({
   rowCount,
@@ -75,22 +87,18 @@ const initialStartPos = { row: 10, col: 30 };
 const initialTargetPos = { row: 15, col: 10 };
 const rowCount = 25;
 const colCount = 50;
-
-const initialGrid = createGrid({ 
-  rowCount, 
-  colCount, 
-  startPos: initialStartPos, 
-  targetPos: initialTargetPos 
-});
+const nodeWidth = 25;
 
 const popSound = new Audio(popSoundPath);
 
 function App() {
-  const [grid, setGrid] = useState(initialGrid);
+  const [grid, setGrid] = useState<TGrid>([]);
   const [startPos, setStartPos] = useState(initialStartPos);
   const [targetPos, setTargetPos] = useState(initialTargetPos);
   const [algoStatus, setAlgoStatus] = useState<'initial' | 'finished' | 'running'>('initial');
+
   const mousePressedType = useRef<string | false>(false);
+  const boardWrapperRef = useRef<HTMLDivElement>(null);
 
   const updateNodeState = useCallback((state: string, row: number, col: number) => {
     setGrid(prevGrid => {
@@ -249,17 +257,82 @@ function App() {
       runDijkstra(); 
     }
     else if (algoStatus === 'finished') {
-      setAlgoStatus('initial')
+      setAlgoStatus('initial');
       // Restart grid
       restartGrid();
     }
   }
 
+  useEffect(() => {
+    if (!boardWrapperRef.current) {
+      return;
+    }
+
+    // Calculate initial grid sizes
+    const gridWidth = boardWrapperRef.current.scrollWidth;
+    const colCount = Math.floor(gridWidth / nodeWidth);
+    
+    // Create initial grid
+    const initialGrid = createGrid({ 
+      rowCount: rowCount, 
+      colCount: colCount, 
+      startPos: initialStartPos, 
+      targetPos: initialTargetPos 
+    });
+
+    setGrid(initialGrid);
+
+    const resizeGrid = () => {
+      // Check if ref is null
+      if (!boardWrapperRef.current) {
+        return;
+      }
+  
+      // Calculate new grid sizes
+      const gridWidth = boardWrapperRef.current.scrollWidth;
+      const colCount = Math.floor(gridWidth / nodeWidth);
+
+      // Update grid
+      setGrid(prevGrid => {
+        const newGrid: TGrid = [];
+
+        // Create resized grid
+        for (let row = 0; row < rowCount; row++) {
+          const currentRow = [];
+
+          for (let col = 0; col < colCount; col++) {
+            const currentNode = prevGrid[row][col];
+
+            // Check if current node exist
+            if (currentNode) {
+              // Add current node to new grid
+              currentRow.push(currentNode);
+            }
+
+            // Current node doesn't exist, grid was increased.
+            else {
+              // Create new node
+              const newNode = createNode(row, col);
+              currentRow.push(newNode);
+            }
+
+          }
+
+          newGrid.push(currentRow);
+        }
+
+        return newGrid;
+      });
+    }
+
+    window.addEventListener('resize', resizeGrid);
+  }, []);
+
   return (
     <Container>
       <Title>Pathfinding Visualizer</Title>
 
-      <BoardWrapper>
+      <BoardWrapper ref={boardWrapperRef}>
         <p><span>Algorithm:</span> Dijkstra</p>
 
         <Board algoStatus={algoStatus}>
