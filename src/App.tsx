@@ -4,7 +4,7 @@ import dijkstra from './dijkstra';
 // @ts-ignore
 import popSoundPath from './assets/pop-sound.mp3'
 
-import { Container, ContentWrapper, Board, Button, Title } from './App.style';
+import { Container, BoardWrapper, Board, Button, Title, MyLink } from './App.style';
 
 export type TPosition = {
   row: number,
@@ -259,7 +259,7 @@ function App() {
     <Container>
       <Title>Pathfinding Visualizer</Title>
 
-      <ContentWrapper>
+      <BoardWrapper>
         <p><span>Algorithm:</span> Dijkstra</p>
 
         <Board algoStatus={algoStatus}>
@@ -293,11 +293,11 @@ function App() {
           {algoStatus === 'running' && 'Running...'}
           {algoStatus === 'finished' && 'Restart'}
         </Button>
-      </ContentWrapper>
+      </BoardWrapper>
 
-      <p className="myLink">
+      <MyLink>
         Made with ❤️ by <a href="https://github.com/CinatitBR">Igor Rocha</a>
-      </p>
+      </MyLink>
     </Container>
   );
 }

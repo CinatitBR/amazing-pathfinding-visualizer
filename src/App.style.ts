@@ -5,27 +5,24 @@ import triangleSvg from './assets/triangle.svg';
 import flagSvg from './assets/flag.svg';
 
 export const Container = styled.div`
-  margin-top: 30px;
   width: 100%;
+  min-height: 100vh;
+  padding: 0 10px;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  .myLink {
-    color: var(--white);
-    position: absolute;
-    left: 10px;
-    bottom: 10px;
-  }
-
-  .myLink a {
-    color: var(--white);
-    font-weight: bold;
-  }
 `;
 
-export const ContentWrapper = styled.main`
+export const Title = styled.h1`
+  margin-top: 20px;
+
+  color: var(--white);
+  font-size: 2.8rem;
+  text-align: center;
+`;
+
+export const BoardWrapper = styled.main`
   padding: 20px;
   border-radius: 16px;
   background-color: var(--background-dark);
@@ -49,12 +46,6 @@ export const ContentWrapper = styled.main`
     color: var(--yellow);
     font-weight: normal;
   }
-`;
-
-export const Title = styled.h1`
-  color: var(--white);
-  font-size: 2.8rem;
-  text-align: center;
 `;
 
 export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finished' }>`
@@ -160,4 +151,17 @@ export const Button = styled.button<{ algoStatus: string }>`
     background-color: #5b467e;
     pointer-events: none;
   `}
+`;
+
+export const MyLink = styled.p`
+  font-size: 1rem;
+  color: var(--white);
+  padding-top: 5px;
+  margin-top: auto;
+  margin-right: auto;
+
+  a {
+    color: var(--white);
+    font-weight: bold;
+  }
 `;

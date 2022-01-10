@@ -1,4 +1,12 @@
-:root {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+
   --background-dark: #29333A;
   --purple: #8E48FF;
   --yellow: #dec14e;
@@ -6,20 +14,9 @@
   --gray: #596978;
   --white: #fff;
   --red: #e97787;
-
-  font-size: 16px;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  height: 100%;
   font-family: 'Khula', sans-serif;
-  padding: 10px;
-
   background: linear-gradient(180deg, #5B32FF 0%, #8E48FF 35.42%) fixed;
 }
