@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/amazing-pathfinding-visualizer/static/css/main.6d4c995c.css",
-    "main.js": "/amazing-pathfinding-visualizer/static/js/main.f8049c37.js",
+    "main.js": "/amazing-pathfinding-visualizer/static/js/main.873f0a73.js",
     "static/media/pop-sound.mp3": "/amazing-pathfinding-visualizer/static/media/pop-sound.8d4cd554c6e41416ef43.mp3",
     "index.html": "/amazing-pathfinding-visualizer/index.html",
     "static/media/flag.svg": "/amazing-pathfinding-visualizer/static/media/flag.a4bee9889fe22b7d8099bb6199cef69f.svg",
     "static/media/triangle.svg": "/amazing-pathfinding-visualizer/static/media/triangle.5affe41abccec1ac5b5da2fc1c5cf540.svg",
     "main.6d4c995c.css.map": "/amazing-pathfinding-visualizer/static/css/main.6d4c995c.css.map",
-    "main.f8049c37.js.map": "/amazing-pathfinding-visualizer/static/js/main.f8049c37.js.map"
+    "main.873f0a73.js.map": "/amazing-pathfinding-visualizer/static/js/main.873f0a73.js.map"
   },
   "entrypoints": [
     "static/css/main.6d4c995c.css",
-    "static/js/main.f8049c37.js"
+    "static/js/main.873f0a73.js"
   ]
 }
