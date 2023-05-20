@@ -19,4 +19,5 @@ html {
 body {
   font-family: 'Khula', sans-serif;
   background: linear-gradient(180deg, #5B32FF 0%, #8E48FF 35.42%) fixed;
+  color: var(--white);
 }

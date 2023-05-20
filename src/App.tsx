@@ -3,8 +3,10 @@ import BoardNode from './components/BoardNode/BoardNode';
 import dijkstra from './dijkstra';
 // @ts-ignore
 import popSoundPath from './assets/pop-sound.mp3'
+// @ts-ignore
+import instructionsGif from './assets/instructions-gif.gif'; // with import
 
-import { Container, BoardWrapper, Board, Button, Title, MyLink } from './App.style';
+import { Container, BoardWrapper, Board, Button, Title, MyLink, InstructionsBox } from './App.style';
 
 export type TPosition = {
   row: number,
@@ -439,6 +441,14 @@ function App() {
           {algoStatus === 'finished' && 'Recomeçar'}
         </Button>
       </BoardWrapper>
+
+      <InstructionsBox>
+        <h3>Como jogar?</h3>
+        <img src={instructionsGif} alt="instructions gif" />
+
+        <p><span>Botão esquerdo:</span> Colocar parede</p>
+        <p><span>Botão direito:</span> Remover parede</p>
+      </InstructionsBox>
 
       <MyLink>
         Made with ❤️ by <a href="https://github.com/CinatitBR">Igor Rocha</a>

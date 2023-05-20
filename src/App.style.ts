@@ -133,6 +133,18 @@ export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finishe
   }
 `;
 
+export const InstructionsBox = styled.div`
+  background-color: var(--background-dark);
+  padding: 20px;
+  border-radius: 16px;
+  margin: 10px;
+  
+  span {
+    font-weight: bold;
+  }
+
+`;
+
 export const Button = styled.button<{ algoStatus: string }>`
   font-size: 1.3rem;
   font-weight: normal;
