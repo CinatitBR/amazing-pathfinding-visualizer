@@ -1,16 +1,19 @@
 {
   "files": {
-    "main.css": "/amazing-pathfinding-visualizer/static/css/main.6d4c995c.css",
-    "main.js": "/amazing-pathfinding-visualizer/static/js/main.873f0a73.js",
+    "main.css": "/amazing-pathfinding-visualizer/static/css/main.2f3c5208.css",
+    "main.js": "/amazing-pathfinding-visualizer/static/js/main.2b637b72.js",
+    "static/media/instructions-gif.gif": "/amazing-pathfinding-visualizer/static/media/instructions-gif.7a4bda4b226d15c53993.gif",
     "static/media/pop-sound.mp3": "/amazing-pathfinding-visualizer/static/media/pop-sound.8d4cd554c6e41416ef43.mp3",
+    "static/media/mouse-left-button.svg": "/amazing-pathfinding-visualizer/static/media/mouse-left-button.442815b4edf810c0cb39034643d08d12.svg",
+    "static/media/mouse-right-button.svg": "/amazing-pathfinding-visualizer/static/media/mouse-right-button.1be2f0c42b8d1049f7cd5db8c22437ac.svg",
     "index.html": "/amazing-pathfinding-visualizer/index.html",
     "static/media/flag.svg": "/amazing-pathfinding-visualizer/static/media/flag.a4bee9889fe22b7d8099bb6199cef69f.svg",
     "static/media/triangle.svg": "/amazing-pathfinding-visualizer/static/media/triangle.5affe41abccec1ac5b5da2fc1c5cf540.svg",
-    "main.6d4c995c.css.map": "/amazing-pathfinding-visualizer/static/css/main.6d4c995c.css.map",
-    "main.873f0a73.js.map": "/amazing-pathfinding-visualizer/static/js/main.873f0a73.js.map"
+    "main.2f3c5208.css.map": "/amazing-pathfinding-visualizer/static/css/main.2f3c5208.css.map",
+    "main.2b637b72.js.map": "/amazing-pathfinding-visualizer/static/js/main.2b637b72.js.map"
   },
   "entrypoints": [
-    "static/css/main.6d4c995c.css",
-    "static/js/main.873f0a73.js"
+    "static/css/main.2f3c5208.css",
+    "static/js/main.2b637b72.js"
   ]
 }
