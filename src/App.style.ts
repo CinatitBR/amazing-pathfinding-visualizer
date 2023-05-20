@@ -22,11 +22,12 @@ export const Title = styled.h1`
   text-align: center;
 `;
 
-export const BoardWrapper = styled.main`
+export const BoardWrapper = styled.main<{ algoStatus: 'initial' | 'running' | 'finished' }>`
   padding: 20px 0;
   border-radius: 16px;
   background-color: var(--background-dark);
   width: 100%;
+  cursor: ${({ algoStatus }) => algoStatus !== 'initial' ? 'not-allowed' : 'auto'};
   
   display: flex;
   flex-direction: column;
@@ -50,7 +51,7 @@ export const BoardWrapper = styled.main`
 
 export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finished', maxWidth: number }>`
   border-collapse: collapse;
-  pointer-events: ${({ algoStatus }) => algoStatus === 'running' ? 'none' : 'auto'};
+  pointer-events: ${({ algoStatus }) => algoStatus !== 'initial' ? 'none' : 'auto'};
   width: 100%;
   max-width: ${({ maxWidth }) => maxWidth}px;
 

@@ -404,7 +404,7 @@ function App() {
     <Container>
       <Title>Encontrando o menor caminho</Title>
 
-      <BoardWrapper ref={boardWrapperRef}>
+      <BoardWrapper ref={boardWrapperRef} algoStatus={algoStatus}>
         {/* <p><span>Algorithm:</span> Dijkstra</p> */}
 
         <Board algoStatus={algoStatus} maxWidth={MAX_GRID_WIDTH}>
