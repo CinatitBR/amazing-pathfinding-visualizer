@@ -4,7 +4,11 @@ import dijkstra from './dijkstra';
 // @ts-ignore
 import popSoundPath from './assets/pop-sound.mp3'
 // @ts-ignore
-import instructionsGif from './assets/instructions-gif.gif'; // with import
+import instructionsGif from './assets/instructions-gif.gif';
+// @ts-ignore
+import leftButtonSvg from './assets/mouse-left-button.svg'
+// @ts-ignore
+import rightButtonSvg from './assets/mouse-right-button.svg'
 
 import { Container, BoardWrapper, Board, Button, Title, MyLink, InstructionsBox } from './App.style';
 
@@ -445,9 +449,11 @@ function App() {
       <InstructionsBox>
         <h3>Como jogar?</h3>
         <img src={instructionsGif} alt="instructions gif" />
-
-        <p><span>Botão esquerdo:</span> Colocar parede</p>
-        <p><span>Botão direito:</span> Remover parede</p>
+        
+        <div>
+          <span><img src={leftButtonSvg} alt="left click" width="50"/>Colocar parede</span>
+          <span><img src={rightButtonSvg} alt="left click" width="50"/>Remover parede</span>
+        </div>
       </InstructionsBox>
 
       <MyLink>

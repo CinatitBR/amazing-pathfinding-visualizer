@@ -140,9 +140,15 @@ export const InstructionsBox = styled.div`
   margin: 10px;
   
   span {
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
   }
 
+  div {
+    display: flex;
+    justify-content: space-around;
+  }
 `;
 
 export const Button = styled.button<{ algoStatus: string }>`
