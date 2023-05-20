@@ -277,7 +277,7 @@ function App() {
 
     const getInitialGrid = () => {
       // Calculate initial grid sizes
-      const initialGridWidth = boardWrapperRef.current!.scrollWidth;
+      const initialGridWidth = Math.min(boardWrapperRef.current!.scrollWidth, MAX_GRID_WIDTH);
       const initialColCount = Math.floor(initialGridWidth / NODE_WIDTH);
 
       const initialStartPos = {
