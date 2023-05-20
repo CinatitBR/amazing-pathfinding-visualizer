@@ -48,11 +48,11 @@ export const BoardWrapper = styled.main`
   }
 `;
 
-export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finished' }>`
+export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finished', maxWidth: number }>`
   border-collapse: collapse;
   pointer-events: ${({ algoStatus }) => algoStatus === 'running' ? 'none' : 'auto'};
   width: 100%;
-  max-width: 1000px;
+  max-width: ${({ maxWidth }) => maxWidth}px;
 
   td {
     border: 1px solid var(--white);

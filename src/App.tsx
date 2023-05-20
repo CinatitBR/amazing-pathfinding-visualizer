@@ -407,7 +407,7 @@ function App() {
       <BoardWrapper ref={boardWrapperRef}>
         {/* <p><span>Algorithm:</span> Dijkstra</p> */}
 
-        <Board algoStatus={algoStatus}>
+        <Board algoStatus={algoStatus} maxWidth={MAX_GRID_WIDTH}>
           <tbody>
             {grid.map((row, index) => 
               <tr key={index}>
