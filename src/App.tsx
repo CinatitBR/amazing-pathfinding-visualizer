@@ -399,10 +399,10 @@ function App() {
 
   return (
     <Container>
-      <Title>Pathfinding Visualizer</Title>
+      <Title>Encontrando o menor caminho</Title>
 
       <BoardWrapper ref={boardWrapperRef}>
-        <p><span>Algorithm:</span> Dijkstra</p>
+        {/* <p><span>Algorithm:</span> Dijkstra</p> */}
 
         <Board algoStatus={algoStatus}>
           <tbody>
@@ -431,9 +431,9 @@ function App() {
           disabled={algoStatus === 'running'}
           algoStatus={algoStatus}
         >
-          {algoStatus === 'initial' && 'Find path'}
-          {algoStatus === 'running' && 'Running...'}
-          {algoStatus === 'finished' && 'Restart'}
+          {algoStatus === 'initial' && 'Encontrar'}
+          {algoStatus === 'running' && 'Calculando menor rota...'}
+          {algoStatus === 'finished' && 'Recomeçar'}
         </Button>
       </BoardWrapper>
 
