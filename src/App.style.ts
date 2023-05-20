@@ -52,6 +52,7 @@ export const Board = styled.table<{ algoStatus: 'initial' | 'running' | 'finishe
   border-collapse: collapse;
   pointer-events: ${({ algoStatus }) => algoStatus === 'running' ? 'none' : 'auto'};
   width: 100%;
+  max-width: 1000px;
 
   td {
     border: 1px solid var(--white);

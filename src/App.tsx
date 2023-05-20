@@ -85,6 +85,7 @@ const createGrid = ({
 
 const ROW_COUNT = 25;
 const NODE_WIDTH = 25;
+const MAX_GRID_WIDTH = 1000;
 
 const popSound = new Audio(popSoundPath);
 
@@ -96,7 +97,6 @@ function App() {
   const targetPos = useRef<TPosition>({ row: 0, col: 0 });
   const colCount = useRef(0)
   const gridWidth = useRef<number | null>(null);
-  const maxGridWidth = 1000;
 
   const mousePressedType = useRef<string | false>(false);
   const boardWrapperRef = useRef<HTMLDivElement>(null);
@@ -374,7 +374,7 @@ function App() {
       
       // Get the new grid width based on the resize. 
       // Grid has a maximum size defined by a variable.
-      const newGridWidth = Math.min(boardWrapperRef.current.scrollWidth, maxGridWidth);
+      const newGridWidth = Math.min(boardWrapperRef.current.scrollWidth, MAX_GRID_WIDTH);
       const newColCount = Math.floor(newGridWidth / NODE_WIDTH);
 
       // Check if new grid width is different than current grid width
